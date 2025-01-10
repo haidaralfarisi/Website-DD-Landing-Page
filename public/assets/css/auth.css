@@ -1,0 +1,137 @@
+html,
+body {
+    background: url("../../assets/images/il-login.jpg") no-repeat center center
+        fixed;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+/* Animasi Laser */
+.wrapper .laser {
+    animation-play-state: running;
+    z-index: 99;
+}
+
+/* adds the 4 corners */
+.anim-box:before,
+.anim-box:after,
+.anim-box > :first-child:before,
+.anim-box > :first-child:after {
+    position: absolute;
+    width: 10%;
+    height: 15%;
+    border-color: rgb(0, 0, 0);
+    border-style: solid;
+    content: " ";
+}
+
+/* top left corner */
+.anim-box:before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+/* top right corner */
+.anim-box:after {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+}
+
+/* bottom right corner */
+.anim-box > :first-child:before {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+/* bottom left corner */
+.anim-box > :first-child:after {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+}
+
+.box {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: #ff4e0d;
+    box-shadow: 0 0 90px 20px #ff4e0d;
+    clip-path: inset(0);
+    animation: x 1s ease-in-out infinite alternate, y 2s ease-in-out infinite;
+}
+
+@keyframes x {
+    to {
+        transform: translateX(-100%);
+        left: 100%;
+    }
+}
+
+@keyframes y {
+    33% {
+        clip-path: inset(0 0 0 -100px);
+    }
+    50% {
+        clip-path: inset(0 0 0 0);
+    }
+    83% {
+        clip-path: inset(0 -100px 0 0);
+    }
+}
+
+/* Toggle */
+.toggle {
+    margin: 0 0 0 1rem;
+    position: relative;
+    display: inline-block;
+    width: 3.5rem;
+    height: 2rem;
+}
+
+.toggle input {
+    display: none;
+}
+
+.roundbutton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    background-color: #00a7ff;
+    display: block;
+    transition: all 0.3s;
+    border-radius: 3.4rem;
+    cursor: pointer;
+}
+
+.roundbutton:before {
+    position: absolute;
+    content: "";
+    height: 1rem;
+    width: 1rem;
+    border-radius: 100%;
+    display: block;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    background-color: white;
+    transition: all 0.3s;
+}
+
+input:checked + .roundbutton {
+    background-color: #ffbc0d;
+}
+
+input:checked + .roundbutton:before {
+    transform: translate(1.5rem, 0);
+}
+
