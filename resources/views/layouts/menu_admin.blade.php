@@ -24,7 +24,7 @@
     <div class="feature col">
         <div class="bg-white p-2 border shadow-sm rounded-3 d-flex align-items-center position-relative">
             <img src="{{ asset('assets/icons/ic-gear.png') }}" height="20" alt="" class="me-2">
-            <a href="" class="text-decoration-none text-dark fw-bold">Data Post</a>
+            <a href="{{ route('post.index') }}" class="text-decoration-none text-dark fw-bold">Data Post</a>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
                 0
                 <span class="visually-hidden">unread messages</span>
@@ -57,7 +57,7 @@
     <div class="feature col">
         <div class="bg-white p-2 border shadow-sm rounded-3 d-flex align-items-center position-relative">
             <img src="{{ asset('assets/icons/ic-gear.png') }}" height="20" alt="" class="me-2">
-            <a href="" class="text-decoration-none text-dark fw-bold">Data Sliders</a>
+            <a href="{{ route('slider.index') }}" class="text-decoration-none text-dark fw-bold">Data Sliders</a>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
                 0
                 <span class="visually-hidden">unread messages</span>
