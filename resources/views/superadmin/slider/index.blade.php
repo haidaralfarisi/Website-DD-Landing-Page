@@ -14,7 +14,7 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_admin')
+            @include('layouts.menu_superadmin')
 
             @include('layouts.alert')
 
@@ -43,7 +43,7 @@
                         <tbody>
                             @foreach ($sliders as $slider)
                                 <tr>
-                                    <<td>{{ $loop->iteration }}</td>
+                                    <td>{{ $loop->iteration }}</td>
                                         <td>{{ $slider->title }}</td>
                                         <td>{{ $slider->unit }}</td>
                                         <td>
@@ -63,7 +63,7 @@
                                             </button>
 
                                             {{-- Tombol Hapus --}}
-                                            <form action="{{ route('video.destroy', $slider->id) }}" method="POST"
+                                            <form action="{{ route('slider.destroy', $slider->id) }}" method="POST"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -87,7 +87,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <form id="editSliderForm"
-                                                    action="{{ route('video.update', ['id' => $slider->id]) }}"
+                                                    action="{{ route('slider.update', ['id' => $slider->id]) }}"
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')

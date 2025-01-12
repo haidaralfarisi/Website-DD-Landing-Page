@@ -14,7 +14,7 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_admin')
+            @include('layouts.menu_superadmin')
 
             @include('layouts.alert')
 
@@ -68,7 +68,7 @@
                                             data-bs-target="#editModal{{ $user->id }}">
                                             Edit
                                         </button>
-                                        <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST"
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST"
                                             class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -92,7 +92,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <form id="editUserForm"
-                                                    action="{{ route('admin.user.update', ['id' => $user->id]) }}"
+                                                    action="{{ route('users.update', ['id' => $user->id]) }}"
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
@@ -186,7 +186,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('admin.user.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>

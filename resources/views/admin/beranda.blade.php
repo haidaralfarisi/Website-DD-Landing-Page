@@ -21,11 +21,11 @@
             <div class="p-4 bg-white shadow-sm border rounded-3">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h5 class="fw-bold">Data User </h5>
+                        <h5 class="fw-bold">Data Post </h5>
                     </div>
                     <div>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Tambah
-                            User+</button>
+                            Post +</button>
                     </div>
                 </div>
                 <div class="table-responsive">

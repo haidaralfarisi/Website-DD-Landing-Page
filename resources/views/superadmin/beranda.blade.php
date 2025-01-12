@@ -14,7 +14,7 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_admin')
+            @include('layouts.menu_superadmin')
 
             @include('layouts.alert')
 

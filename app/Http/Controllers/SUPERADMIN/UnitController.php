@@ -8,18 +8,14 @@ use Illuminate\Http\Request;
 
 class UnitController extends Controller
 {
+    // Menampilkan Data Dari Unit
     public function index()
     {
         $units = Unit::all();
         return view('superadmin.unit.index', compact('units'));
     }
 
-    // public function create()
-    // {
-    //     return view('superadmin.unit.create');
-    // }
-
-    // Menyimpan kategori baru
+    // Menyimpan Data Kategori Baru
     public function store(Request $request)
     {
         // Validasi data
@@ -39,14 +35,7 @@ class UnitController extends Controller
         return redirect()->back()->with('success', 'Unit berhasil ditambahkan.');
     }
 
-
-    // Menampilkan form untuk mengedit kategori
-    // public function edit(Unit $unit)
-    // {
-    //     return view('superadmin.unit.edit', compact('unit'));
-    // }
-
-    // Memperbarui kategori
+    // Function Edit Data Unit
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -61,12 +50,13 @@ class UnitController extends Controller
 
         $unit->update($data);
 
-
         $unit->update($request->all());
+
+        // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'unit berhasil diubah.');
     }
 
-    // Menghapus kategori
+    // Menghapus Data Unit
     public function destroy($id)
     {
         // Cari data kategori berdasarkan ID

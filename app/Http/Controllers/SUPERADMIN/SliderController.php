@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
-    
+
+    // Menampilkan Data Dari Slider
     public function index()
     {
         $sliders = Slider::all();
         return view('superadmin.slider.index', compact('sliders'));
     }
-
+    // Function Menyimpan Data Slider
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -43,6 +44,38 @@ class SliderController extends Controller
         return redirect()->back()->with('success', 'Slider berhasil ditambahkan.');
     }
 
+    // Function Edit Data Slider
+    public function update(Request $request, $id)
+    {
+        $sliders = Slider::findOrFail($id);
+
+        // Validasi data
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'unit' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        // Menyimpan gambar jika ada
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+        } else {
+            $imagePath = $sliders->image;  // Gunakan gambar lama jika tidak ada yang baru
+        }
+
+        // Update data video
+        $sliders->update([
+            'title' => $validated['title'],
+            'unit' => $validated['unit'],
+            'image' => $imagePath,
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->back()->with('success', 'Slider berhasil diperbarui.');
+    }
+
+    // Function Delete Data Slider
     public function destroy($id)
     {
         // Cari data kategori berdasarkan ID

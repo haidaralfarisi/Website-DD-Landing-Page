@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers\SUPERADMIN;
+
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -56,8 +57,6 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');
     }
 
-
-
     // Function Untuk Menghapus Data User
     public function destroy($id)
     {
@@ -69,19 +68,7 @@ class UserController extends Controller
 
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'User berhasil dihapus.');
-    }
-
-    // Function Untuk Mengedit Data User
-    public function edit($id)
-    {
-        // Cari user berdasarkan ID
-        $user = User::findOrFail($id);
-        // return response()->json($user); // Kirimkan data user sebagai response JSON
-
-
-        // Pass data ke view
-        return view('admin.users.edit', compact('user'));
-    }
+    }    
 
     // Function Untuk Mengupdate Data User
     public function update(Request $request, $id)
@@ -118,6 +105,7 @@ class UserController extends Controller
 
         // Cek jika ada avatar yang diupload
         if ($request->hasFile('avatar')) {
+
             // Hapus avatar lama jika ada
             if ($user->avatar && file_exists(storage_path('app/public/' . $user->avatar))) {
                 unlink(storage_path('app/public/' . $user->avatar)); // Menghapus avatar lama

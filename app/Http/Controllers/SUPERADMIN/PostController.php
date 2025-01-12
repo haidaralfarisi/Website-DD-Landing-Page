@@ -10,8 +10,17 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    // Menampilkan Data Dari Post
+    public function index()
+    {
+        $posts = Post::all();
+        return view('superadmin.post.index', compact('posts'));
+    }
+
+    // Function Menyimpan Data Post
     public function store(Request $request)
     {
+        // Validasi data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:posts,slug',
@@ -39,7 +48,8 @@ class PostController extends Controller
         } else {
             $imagePath = null;
         }
-
+        
+        // Simpan data ke database
         Post::create([
             'title' => $validated['title'],
             'slug' => $validated['slug'],
@@ -49,29 +59,19 @@ class PostController extends Controller
             'image' => $imagePath,
             'description' => $validated['description'],
             'publish_date' => $validated['publish_date'],
-            'status' => $validated['status'],
+            'status' => $validated['status'], 
             'unit' => $validated['unit'],
             'user_id' => $validated['user_id'],
         ]);
 
+        // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Post berhasil ditambahkan.');
     }
 
-    // public function destroy($id)
-    // {
-    //     // Cari data kategori berdasarkan ID
-    //     $post = Post::findOrFail($id);
-
-    //     // Hapus data
-    //     $post->delete();
-
-    //     // Redirect dengan pesan sukses
-    //     return redirect()->back()->with('success', 'Post berhasil dihapus.');
-    // }
-
+    // Function Menghapus Data Post
     public function destroy($id)
     {
-        // Cari data kategori berdasarkan ID
+        // Cari data Post berdasarkan ID
         $post = Post::findOrFail($id);
 
         // Hapus gambar dari storage jika ada
@@ -85,5 +85,4 @@ class PostController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Post berhasil dihapus.');
     }
-    
 }

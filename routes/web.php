@@ -2,9 +2,12 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\SUPERADMIN\BerandaSuperAdminController;
+
 use App\Http\Controllers\ADMIN\BerandaAdminController;
+use App\Http\Controllers\ADMIN\PostController;
+
+use App\Http\Controllers\SUPERADMIN\BerandaSuperAdminController;
+use App\Http\Controllers\SUPERADMIN\UserController;
 use App\Http\Controllers\SUPERADMIN\CategoryController;
 use App\Http\Controllers\SUPERADMIN\SliderController;
 use App\Http\Controllers\SUPERADMIN\UnitController;
@@ -35,13 +38,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get('beranda', [BerandaSuperAdminController::class, 'index'])->name('beranda');
 
-
     # Untuk Aksi Data User
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
-    Route::post('/admin/user/store', [UserController::class, 'store'])->name('admin.user.store');
-    Route::delete('/admin/user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
-    Route::get('/admin/user/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
-    Route::put('admin/user/{id}', [UserController::class, 'update'])->name('admin.user.update');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    // Route::get('/admin/user/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 
     # Untuk Aksi Data Category
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -74,11 +76,15 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::delete('/slider/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
     Route::put('/slider/{id}', [SliderController::class, 'update'])->name('slider.update');
 
-
-
 });
 
 # Admin
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('beranda', [BerandaAdminController::class, 'index'])->name('admin.index');
+
+    # Untuk Aksi Data Post
+    Route::get('/post', [VideoController::class, 'index'])->name('posts.index');
+    Route::post('/post', [VideoController::class, 'store'])->name('post.store');
+    Route::delete('/post/{id}', [VideoController::class, 'destroy'])->name('post.destroy');
+    Route::put('/post/{id}', [VideoController::class, 'update'])->name('post.update');
 });

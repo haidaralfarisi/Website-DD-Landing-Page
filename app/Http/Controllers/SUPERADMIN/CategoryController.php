@@ -8,24 +8,20 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    // Menampilkan Data Categori
     public function index()
     {
         $categories = Categories::all();
         return view('superadmin.category.index', compact('categories'));
     }
 
-    public function create()
-    {
-        return view('superadmin.categories.create');
-    }
-
-    // Menyimpan kategori baru
+    // Menyimpan Data kategori baru
     public function store(Request $request)
     {
         // Validasi data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'unit' => 'nullable|string', // Tambahkan field sesuai kebutuhan
+            'unit' => 'nullable|string',
         ]);
 
         // Persiapkan data untuk disimpan
@@ -39,13 +35,6 @@ class CategoryController extends Controller
 
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Category berhasil ditambahkan.');
-    }
-
-
-    // Menampilkan form untuk mengedit kategori
-    public function edit(Categories $category)
-    {
-        return view('superadmin.categories.edit', compact('category'));
     }
 
     // Memperbarui kategori
@@ -64,13 +53,13 @@ class CategoryController extends Controller
         ];
 
         $category->update($data);
-
-
         $category->update($request->all());
+        
+        // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'User berhasil diubah.');
     }
 
-    // Menghapus kategori
+    // Menghapus Data kategori
     public function destroy($id)
     {
         // Cari data kategori berdasarkan ID
