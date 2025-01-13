@@ -46,7 +46,7 @@ class LoginController extends Controller
         if ($user->level == 'superadmin') {
             return redirect()->route('beranda'); // Sesuaikan dengan route yang ada
         } elseif ($user->level == 'admin') {
-            return redirect()->route('admin.index'); // Sesuaikan dengan route yang ada
+            return redirect()->route('admin.posts.index'); // Sesuaikan dengan route yang ada
         }
 
         // Default redirect if level is not matched

@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered text-nowrap">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -44,33 +44,42 @@
                                 <th>Status</th>
                                 <th>Unit</th>
                                 <th>User Id</th>
+                                <th>Category Id</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($videos as $video)
+                            @foreach ($posts as $post)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $video->title }}</td>
-                                    <td>{{ $video->unit }}</td>
+                                    <td>{{ $post->title }}</td>
+                                    <td>{{ $post->slug }}</td>
+                                    <td>{{ $post->meta_keyword }}</td>
+                                    <td>{{ $post->meta_description }}</td>
+                                    <td>{{ $post->meta_thumbnail }}</td>
                                     <td>
-                                        @if ($video->image)
-                                            <img src="{{ asset('storage/' . $video->image) }}" alt="Video Image"
+                                        @if ($post->image)
+                                            <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image"
                                                 width="50" height="50">
                                         @else
                                             <span>No Image</span>
                                         @endif
-                                    <td>{{ $video->status }}</td>
-                                    <td>{{ $video->url }}</td>
+                                    </td>
+                                    <td>{{ $post->description }}</td>
+                                    <td>{{ $post->publish_date }}</td>
+                                    <td>{{ $post->status }}</td>
+                                    <td>{{ $post->unit->name ?? 'No Unit' }}</td> <!-- Menampilkan nama unit -->
+                                    <td>{{ $post->user->name ?? 'Unknown User' }}</td> <!-- Mengambil nama user -->
+                                    <td>{{ $post->category->name ?? 'No Category' }}</td> <!-- Mengambil nama kategori -->
                                     <td>
                                         {{-- Tombol Edit --}}
                                         <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ $video->id }}">
+                                            data-bs-target="#editModal{{ $post->id }}">
                                             Edit
                                         </button>
 
                                         {{-- Tombol Hapus --}}
-                                        <form action="{{ route('video.destroy', $video->id) }}" method="POST"
+                                        <form action="{{ route('superadmin.posts.destroy', $post->id) }}" method="POST"
                                             class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -83,18 +92,17 @@
                                 <!-- Modal Untuk Edit User-->
                                 {{-- Modal harus di dalam foreach dan harus meletakkan {{ $user->id }} agar bisa di panggil sesuai id yang
                                 di inginkan --}}
-                                <div class="modal fade" id="editModal{{ $video->id }}" tabindex="-1"
+                                <div class="modal fade" id="editModal{{ $post->id }}" tabindex="-1"
                                     aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content p-3 border-0 rounded-4">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="editModalLabel">Edit Data Video</h1>
+                                                <h1 class="modal-title fs-5" id="editModalLabel">Edit Data Post</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form id="editVideoForm"
-                                                    action="{{ route('video.update', ['id' => $video->id]) }}"
+                                                <form action="{{ route('superadmin.posts.update', ['id' => $post->id]) }}"
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
@@ -103,16 +111,45 @@
                                                     <div class="mb-3">
                                                         <label for="title" class="form-label">Title</label>
                                                         <input type="text" class="form-control" id="title"
-                                                            name="title" value="{{ old('title', $video->title) }}"
+                                                            name="title" value="{{ old('title', $post->title) }}"
                                                             required>
                                                     </div>
 
-                                                    <!-- Nama -->
+                                                    <!-- Slug -->
                                                     <div class="mb-3">
-                                                        <label for="unit" class="form-label">Unit</label>
-                                                        <input type="text" class="form-control" id="unit"
-                                                            name="unit" value="{{ old('unit', $video->unit) }}"
-                                                            required>
+                                                        <label for="slug" class="form-label">Slug</label>
+                                                        <input type="text" class="form-control" id="slug"
+                                                            name="slug" value="{{ old('slug', $post->slug) }}" required>
+                                                    </div>
+
+                                                    <!-- Meta Keyword -->
+                                                    <div class="mb-3">
+                                                        <label for="meta_keyword" class="form-label">Meta Keyword</label>
+                                                        <input type="text" class="form-control" id="meta_keyword"
+                                                            name="meta_keyword"
+                                                            value="{{ old('meta_keyword', $post->meta_keyword) }}">
+                                                    </div>
+
+                                                    <!-- Meta Description -->
+                                                    <div class="mb-3">
+                                                        <label for="meta_description" class="form-label">Meta
+                                                            Description</label>
+                                                        <textarea class="form-control" id="meta_description" name="meta_description" rows="3">{{ old('meta_description', $post->meta_description) }}</textarea>
+                                                    </div>
+
+                                                    {{-- <!-- Meta Thumbnail -->
+                                                    <div class="mb-3">
+                                                        <label for="meta_thumbnail" class="form-label">Meta
+                                                            Thumbnail</label>
+                                                        <input type="text" class="form-control" id="meta_thumbnail"
+                                                            name="meta_thumbnail"
+                                                            value="{{ old('meta_thumbnail', $post->meta_thumbnail) }}">
+                                                    </div> --}}
+
+                                                    <div class="mb-3">
+                                                        <label for="meta_thumbnail" class="form-label">Meta Thumbnail</label>
+                                                        <input type="file" class="form-control" id="meta_thumbnail"
+                                                            name="meta_thumbnail" accept="image/*">
                                                     </div>
 
                                                     <!-- Image -->
@@ -122,24 +159,72 @@
                                                             name="image" accept="image/*">
                                                     </div>
 
+                                                    <!-- Description -->
+                                                    <div class="mb-3">
+                                                        <label for="description" class="form-label">Description</label>
+                                                        <textarea class="form-control" id="description" name="description" rows="5">{{ old('description', $post->description) }}</textarea>
+                                                    </div>
+
+                                                    <!-- Publish Date -->
+                                                    <div class="mb-3">
+                                                        <label for="publish_date" class="form-label">Publish Date</label>
+                                                        <input type="date" class="form-control" id="publish_date"
+                                                            name="publish_date"
+                                                            value="{{ old('publish_date', $post->publish_date) }}"
+                                                            required>
+                                                    </div>
+
                                                     <!-- Status -->
                                                     <div class="mb-3">
                                                         <label for="status" class="form-label">Status</label>
-                                                        <select class="form-select" id="status" name="status" required>
+                                                        <select class="form-select" id="status" name="status"
+                                                            required>
                                                             <option value="active"
-                                                                {{ old('status', $video->status) == 'active' ? 'selected' : '' }}>
+                                                                {{ old('status', $post->status) == 'active' ? 'selected' : '' }}>
                                                                 Active</option>
                                                             <option value="inactive"
-                                                                {{ old('status', $video->status) == 'inactive' ? 'selected' : '' }}>
+                                                                {{ old('status', $post->status) == 'inactive' ? 'selected' : '' }}>
                                                                 Inactive</option>
                                                         </select>
                                                     </div>
 
-                                                    <!-- Url -->
+                                                    <!-- Unit -->
                                                     <div class="mb-3">
-                                                        <label for="url" class="form-label">URL</label>
-                                                        <input type="text" class="form-control" id="url"
-                                                            name="url" value="{{ old('url', $video->url) }}" required>
+                                                        <label for="unit_id" class="form-label">Unit</label>
+                                                        <select class="form-select" id="unit_id" name="unit_id"
+                                                            required>
+                                                            @foreach ($units as $unit)
+                                                                <option value="{{ $unit->id }}"
+                                                                    {{ old('unit_id', $post->unit_id) == $unit->id ? 'selected' : '' }}>
+                                                                    {{ $unit->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- User ID -->
+                                                    <div class="mb-3">
+                                                        <label for="user_id" class="form-label">User</label>
+                                                        <select class="form-select" id="user_id" name="user_id"
+                                                            required>
+                                                            @foreach ($users as $user)
+                                                                <option value="{{ $user->id }}"
+                                                                    {{ old('user_id', $post->user_id) == $user->id ? 'selected' : '' }}>
+                                                                    {{ $user->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Category ID -->
+                                                    <div class="mb-3">
+                                                        <label for="category_id" class="form-label">Category</label>
+                                                        <select class="form-select" id="category_id" name="category_id"
+                                                            required>
+                                                            @foreach ($categories as $category)
+                                                                <option value="{{ $category->id }}"
+                                                                    {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
+                                                                    {{ $category->name }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
 
                                                     <div class="modal-footer">
@@ -148,7 +233,6 @@
                                                         <button type="submit" class="btn btn-primary">Simpan</button>
                                                     </div>
                                                 </form>
-
                                             </div>
                                         </div>
                                     </div>
@@ -159,7 +243,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -169,31 +252,64 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-3 border-0 rounded-4">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createModalLabel">Tambah Unit</h1>
+                    <h1 class="modal-title fs-5" id="createModalLabel">Tambah Post</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('video.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('superadmin.posts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        <!-- Nama Video -->
+                        <!-- Title -->
                         <div class="mb-3">
-                            <label for="title" class="form-label">Judul Video</label>
+                            <label for="title" class="form-label">Title</label>
                             <input type="text" class="form-control" id="title" name="title"
-                                placeholder="Judul Video" required>
+                                placeholder="Title" required>
                         </div>
 
-                        <!-- Unit -->
+                        <!-- Slug -->
                         <div class="mb-3">
-                            <label for="unit" class="form-label">Unit</label>
-                            <input type="text" class="form-control" id="unit" name="unit" placeholder="Unit"
+                            <label for="slug" class="form-label">Slug</label>
+                            <input type="text" class="form-control" id="slug" name="slug" placeholder="Slug"
                                 required>
                         </div>
 
-                        <!-- Gambar -->
+                        <!-- Meta Keyword -->
                         <div class="mb-3">
-                            <label for="image" class="form-label">Gambar</label>
+                            <label for="meta_keyword" class="form-label">Meta Keyword</label>
+                            <input type="text" class="form-control" id="meta_keyword" name="meta_keyword"
+                                placeholder="Meta Keyword">
+                        </div>
+
+                        <!-- Meta Description -->
+                        <div class="mb-3">
+                            <label for="meta_description" class="form-label">Meta Description</label>
+                            <textarea class="form-control" id="meta_description" name="meta_description" rows="3"
+                                placeholder="Meta Description"></textarea>
+                        </div>
+
+                        <!-- Meta Thumbnail -->
+                        <div class="mb-3">
+                            <label for="meta_thumbnail" class="form-label">Meta Thumbnail</label>
+                            <input type="file" class="form-control" id="meta_thumbnail" name="meta_thumbnail"
+                                placeholder="Meta Thumbnail">
+                        </div>
+
+                        <!-- Image -->
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" placeholder="Description"></textarea>
+                        </div>
+
+                        <!-- Publish Date -->
+                        <div class="mb-3">
+                            <label for="publish_date" class="form-label">Publish Date</label>
+                            <input type="date" class="form-control" id="publish_date" name="publish_date" required>
                         </div>
 
                         <!-- Status -->
@@ -205,11 +321,35 @@
                             </select>
                         </div>
 
-                        <!-- URL -->
+                        <!-- Unit -->
                         <div class="mb-3">
-                            <label for="url" class="form-label">URL Video</label>
-                            <input type="url" class="form-control" id="url" name="url"
-                                placeholder="URL Video" required>
+                            <label for="unit_id" class="form-label">Unit</label>
+                            <select name="unit_id" id="unit_id" class="form-select">
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+                        <!-- User ID -->
+                        <div class="mb-3">
+                            <label for="user_id" class="form-label">User</label>
+                            <select class="form-select" id="user_id" name="user_id">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Category ID -->
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Category</label>
+                            <select class="form-select" id="category_id" name="category_id">
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="modal-footer">
@@ -218,7 +358,6 @@
                         </div>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>

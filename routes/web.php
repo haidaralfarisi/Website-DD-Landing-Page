@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ADMIN\BerandaAdminController;
-use App\Http\Controllers\ADMIN\PostController;
+use App\Http\Controllers\ADMIN\PostController as ADMINPOST;
 
 use App\Http\Controllers\SUPERADMIN\BerandaSuperAdminController;
 use App\Http\Controllers\SUPERADMIN\UserController;
@@ -12,6 +12,8 @@ use App\Http\Controllers\SUPERADMIN\CategoryController;
 use App\Http\Controllers\SUPERADMIN\SliderController;
 use App\Http\Controllers\SUPERADMIN\UnitController;
 use App\Http\Controllers\SUPERADMIN\VideoController;
+use App\Http\Controllers\SUPERADMIN\PostController as SUPERADMINPOST;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -65,26 +67,28 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::put('/video/{id}', [VideoController::class, 'update'])->name('video.update');
 
     # Untuk Aksi Data Post
-    Route::get('/post', [VideoController::class, 'index'])->name('post.index');
-    Route::post('/post', [VideoController::class, 'store'])->name('post.store');
-    Route::delete('/post/{id}', [VideoController::class, 'destroy'])->name('post.destroy');
-    Route::put('/post/{id}', [VideoController::class, 'update'])->name('post.update');
+    // Route::get('/post', function () {
+    //     return 'yaa';
+    // })->name('superadmin.posts.index');
+    Route::get('/post', [SUPERADMINPOST::class, 'index'])->name('superadmin.posts.index');
+    Route::post('/post', [SUPERADMINPOST::class, 'store'])->name('superadmin.posts.store');
+    Route::delete('/post/{id}', [SUPERADMINPOST::class, 'destroy'])->name('superadmin.posts.destroy');
+    Route::put('/post/{id}', [SUPERADMINPOST::class, 'update'])->name('superadmin.posts.update');
 
     # Untuk Aksi Data Slider
     Route::get('/slider', [SliderController::class, 'index'])->name('slider.index');
     Route::post('/slider', [SliderController::class, 'store'])->name('slider.store');
     Route::delete('/slider/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
     Route::put('/slider/{id}', [SliderController::class, 'update'])->name('slider.update');
-
 });
 
 # Admin
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('beranda', [BerandaAdminController::class, 'index'])->name('admin.index');
+    // Route::get('beranda', [BerandaAdminController::class, 'index'])->name('beranda');
 
     # Untuk Aksi Data Post
-    Route::get('/post', [VideoController::class, 'index'])->name('posts.index');
-    Route::post('/post', [VideoController::class, 'store'])->name('post.store');
-    Route::delete('/post/{id}', [VideoController::class, 'destroy'])->name('post.destroy');
-    Route::put('/post/{id}', [VideoController::class, 'update'])->name('post.update');
+    Route::get('/post', [ADMINPOST::class, 'index'])->name('admin.posts.index');
+    Route::post('/post', [ADMINPOST::class, 'store'])->name('admin.posts.store');
+    Route::delete('/post/{id}', [ADMINPOST::class, 'destroy'])->name('admin.posts.destroy');
+    Route::put('/post/{id}', [ADMINPOST::class, 'update'])->name('admin.posts.update');
 });

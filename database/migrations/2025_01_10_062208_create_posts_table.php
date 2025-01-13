@@ -22,8 +22,9 @@ return new class extends Migration
         $table->text('description')->nullable(); // Deskripsi
         $table->date('publish_date')->nullable(); // Tanggal Publish
         $table->enum('status', ['active', 'inactive'])->default('active'); // Status
-        $table->string('unit')->nullable(); // Unit
-        $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Relasi ke tabel Users
+        $table->bigInteger('unit_id')->unsigned(); // ID Unit
+        $table->bigInteger('user_id')->unsigned(); // ID User
+        $table->bigInteger('category_id')->unsigned(); // ID Kategori
         $table->timestamps(); // created_at dan updated_at
     });
 }

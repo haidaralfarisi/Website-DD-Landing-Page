@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Categories extends Model
+class Achievement extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
-    public function posts()
-    {
-        return $this->hasMany(Post::class, 'category_id', 'id');
-    }
+    
 }
