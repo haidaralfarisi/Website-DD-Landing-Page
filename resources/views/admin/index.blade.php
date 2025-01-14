@@ -14,7 +14,7 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_admin')
+            @include('layouts.menu_superadmin')
 
             @include('layouts.alert')
 
@@ -89,7 +89,7 @@
                                         </button>
 
                                         {{-- Tombol Hapus --}}
-                                        <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST"
+                                        <form action="{{ route('superadmin.posts.destroy', $post->id) }}" method="POST"
                                             class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -112,7 +112,7 @@
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{ route('admin.posts.update', ['id' => $post->id]) }}"
+                                                <form action="{{ route('superadmin.posts.update', ['id' => $post->id]) }}"
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
@@ -259,7 +259,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('superadmin.posts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Title -->

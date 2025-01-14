@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SUPERADMIN;
 
 use App\Http\Controllers\Controller;
+use App\Models\Unit;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,8 +13,14 @@ class VideoController extends Controller
     // Menampilkan Data Dari Video
     public function index()
     {
-        $videos = Video::all();
-        return view('superadmin.video.index', compact('videos'));
+
+        $videos = Video::with(['unit'])->paginate('10');
+        $units = Unit::all();
+
+        $videosCount = Video::count();  // Menghitung jumlah User
+
+        return view('superadmin.video.index', compact('units', 'videos', 'videosCount'));
+
     }
 
     // Menyimpan Data Video baru
@@ -22,7 +29,7 @@ class VideoController extends Controller
         // Validasi data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'unit' => 'nullable|string|max:255',  // Unit bersifat optional
+            'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi file image
             'status' => 'required|in:active,inactive',  // Status harus salah satu dari active atau inactive
             'url' => 'required|url',  // URL video harus valid
@@ -39,7 +46,7 @@ class VideoController extends Controller
         // Persiapkan data untuk disimpan
         $data = [
             'title' => $validated['title'],
-            'unit' => $validated['unit'],
+            'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,  // Menyimpan path gambar jika ada
             'status' => $validated['status'],
             'url' => $validated['url'],
@@ -60,7 +67,7 @@ class VideoController extends Controller
         // Validasi data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'unit' => 'nullable|string|max:255',
+            'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|in:active,inactive',
             'url' => 'required|url',
@@ -76,7 +83,7 @@ class VideoController extends Controller
         // Update data video
         $video->update([
             'title' => $validated['title'],
-            'unit' => $validated['unit'],
+            'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,
             'status' => $validated['status'],
             'url' => $validated['url'],

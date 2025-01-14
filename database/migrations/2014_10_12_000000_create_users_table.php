@@ -18,8 +18,8 @@ return new class extends Migration
             $table->bigInteger('nip')->unique()->nullable();
             $table->string('name_label')->nullable();
             $table->string('avatar')->nullable();
-            $table->string('unit')->nullable();
-            $table->enum('level', ['superadmin', 'admin'])->default('superadmin');
+            $table->bigInteger('unit_id')->unsigned(); // ID Unit
+            $table->enum('level', ['Superadmin', 'Admin'])->default('Superadmin');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -14,7 +14,15 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_superadmin')
+            {{-- @include('layouts.menu_superadmin') --}}
+
+            <div class="d-flex align-items-center mb-4">
+                <button onclick="window.location.href='{{ route('beranda') }}'" class="btn btn-secondary me-2">
+                    Kembali
+                </button>
+                {{-- <div class="me-2">|</div>
+                <div class="text-decoration-none me-2 fw-bold">Data Achievement</div> --}}
+            </div>
 
             @include('layouts.alert')
 
@@ -56,7 +64,16 @@
                                     <td>{{ $post->slug }}</td>
                                     <td>{{ $post->meta_keyword }}</td>
                                     <td>{{ $post->meta_description }}</td>
-                                    <td>{{ $post->meta_thumbnail }}</td>
+
+                                    <td>
+                                        @if ($post->meta_thumbnail)
+                                            <img src="{{ asset('storage/' . $post->meta_thumbnail) }}" alt="Meta Thumbnail"
+                                                width="50" height="50">
+                                        @else
+                                            <span>No Image</span>
+                                        @endif
+                                    </td>
+
                                     <td>
                                         @if ($post->image)
                                             <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image"
@@ -65,6 +82,7 @@
                                             <span>No Image</span>
                                         @endif
                                     </td>
+
                                     <td>{{ $post->description }}</td>
                                     <td>{{ $post->publish_date }}</td>
                                     <td>{{ $post->status }}</td>
@@ -137,17 +155,10 @@
                                                         <textarea class="form-control" id="meta_description" name="meta_description" rows="3">{{ old('meta_description', $post->meta_description) }}</textarea>
                                                     </div>
 
-                                                    {{-- <!-- Meta Thumbnail -->
+                                                    <!-- Meta Thumbnail -->
                                                     <div class="mb-3">
                                                         <label for="meta_thumbnail" class="form-label">Meta
                                                             Thumbnail</label>
-                                                        <input type="text" class="form-control" id="meta_thumbnail"
-                                                            name="meta_thumbnail"
-                                                            value="{{ old('meta_thumbnail', $post->meta_thumbnail) }}">
-                                                    </div> --}}
-
-                                                    <div class="mb-3">
-                                                        <label for="meta_thumbnail" class="form-label">Meta Thumbnail</label>
                                                         <input type="file" class="form-control" id="meta_thumbnail"
                                                             name="meta_thumbnail" accept="image/*">
                                                     </div>
@@ -241,6 +252,7 @@
 
                         </tbody>
                     </table>
+                    {{$posts->links()}}
                 </div>
             </div>
         </div>

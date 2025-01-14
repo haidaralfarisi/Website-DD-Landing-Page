@@ -11,8 +11,11 @@ class UnitController extends Controller
     // Menampilkan Data Dari Unit
     public function index()
     {
-        $units = Unit::all();
-        return view('superadmin.unit.index', compact('units'));
+        $units = Unit::paginate(10);
+
+        $unitsCount = Unit::count();  // Menghitung jumlah slider
+
+        return view('superadmin.unit.index', compact('units', 'unitsCount'));
     }
 
     // Menyimpan Data Kategori Baru

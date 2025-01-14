@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\SUPERADMIN;
 
 use App\Http\Controllers\Controller;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,15 @@ class UserController extends Controller
     public function index()
     {
         // Ambil semua data pengguna dari tabel users
-        $users = User::all();
+        // $users = User::all();
 
-        // Kirim data pengguna ke view superadmin.user.index
-        return view('superadmin.user.index', compact('users'));
+        $users = User::with(['unit'])->paginate('10');
+        $units = Unit::all();
+
+        $usersCount = User::count();  // Menghitung jumlah User
+    
+        return view('superadmin.user.index', compact('units', 'users', 'usersCount'));
+
     }
 
        public function store(Request $request)
@@ -29,7 +35,7 @@ class UserController extends Controller
             'name_label' => 'nullable|string|max:255',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'level' => 'required|in:superadmin,admin',
-            'unit' => 'required|string|max:255',
+            'unit_id' => 'required|exists:units,id',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
@@ -40,7 +46,7 @@ class UserController extends Controller
             'nip' => $validated['nip'],
             'name_label' => $validated['name_label'],
             'level' => $validated['level'],
-            'unit' => $validated['unit'],
+            'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'password' => bcrypt($validated['password']),
         ];
 
@@ -80,7 +86,7 @@ class UserController extends Controller
             'nip' => 'required|string|max:20',
             'name_label' => 'nullable|string|max:255',
             'level' => 'required|in:superadmin,admin',
-            'unit' => 'required|string|max:255',
+            'unit_id' => 'required|exists:units,id',
             'password' => 'nullable|string|min:6|confirmed',  // Pastikan konfirmasi password
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Validasi untuk avatar
         ]);
@@ -95,7 +101,7 @@ class UserController extends Controller
             'nip' => $validated['nip'],
             'name_label' => $validated['name_label'],
             'level' => $validated['level'],
-            'unit' => $validated['unit'],
+            'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
         ];
 
         // Update password jika ada

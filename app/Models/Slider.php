@@ -9,10 +9,10 @@ class Slider extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'unit',
-        'image',
-        'status',
-    ];
+    protected $guarded = ['id'];
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
 }

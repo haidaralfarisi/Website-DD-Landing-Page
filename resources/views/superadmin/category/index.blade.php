@@ -14,7 +14,15 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_superadmin')
+            {{-- @include('layouts.menu_superadmin') --}}
+
+            <div class="d-flex align-items-center mb-4">
+                <button onclick="window.location.href='{{ route('beranda') }}'" class="btn btn-secondary me-2">
+                    Kembali
+                </button>
+                {{-- <div class="me-2">|</div>
+                <div class="text-decoration-none me-2 fw-bold">Data Achievement</div> --}}
+            </div>
 
             @include('layouts.alert')
 
@@ -29,7 +37,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered text-nowrap">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -43,7 +51,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $category->name }}</td>
-                                    <td>{{ $category->unit }}</td>
+                                    <td>{{ $category->unit->name ?? 'Tidak Ada Unit' }}</td>
                                     <td>
                                         {{-- Tombol Edit --}}
                                         <button class="btn btn-outline-primary" data-bs-toggle="modal"
@@ -80,19 +88,35 @@
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
+
                                                     <!-- Nama -->
                                                     <div class="mb-3">
                                                         <label for="name" class="form-label">Nama</label>
                                                         <input type="text" class="form-control" id="name"
-                                                            name="name" value="{{ old('name', $category->name) }}" required>
+                                                            name="name" value="{{ old('name', $category->name) }}"
+                                                            required>
                                                     </div>
-                                                    <!-- Unit -->
+
+                                                    {{-- <!-- Unit -->
                                                     <div class="mb-3">
                                                         <label for="unit" class="form-label">Unit</label>
                                                         <input type="unit" class="form-control" id="unit"
                                                             name="unit" value="{{ old('unit', $category->unit) }}"
                                                             required>
+                                                    </div> --}}
+
+                                                    <div class="mb-3">
+                                                        <label for="unit_id" class="form-label">Unit</label>
+                                                        <select class="form-select" id="unit_id" name="unit_id" required>
+                                                            @foreach ($units as $unit)
+                                                                <option value="{{ $unit->id }}"
+                                                                    {{ old('unit_id', $category->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
+                                                                    {{ $unit->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Tutup</button>
@@ -108,6 +132,7 @@
 
                         </tbody>
                     </table>
+                    {{ $categories->links() }}
                 </div>
             </div>
 
@@ -131,11 +156,17 @@
                             <input type="text" class="form-control" id="name" name="name"
                                 placeholder="Nama Category" required>
                         </div>
+
+                        <!-- Unit -->
                         <div class="mb-3">
-                            <label for="unit" class="form-label">Unit</label>
-                            <input type="unit" class="form-control" id="unit" name="unit"
-                                placeholder="Unit" required>
+                            <label for="unit_id" class="form-label">Unit</label>
+                            <select name="unit_id" id="unit_id" class="form-select">
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>

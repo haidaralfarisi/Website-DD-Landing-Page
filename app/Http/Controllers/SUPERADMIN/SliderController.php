@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\SUPERADMIN;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categories;
 use App\Models\Slider;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,15 +15,21 @@ class SliderController extends Controller
     // Menampilkan Data Dari Slider
     public function index()
     {
-        $sliders = Slider::all();
-        return view('superadmin.slider.index', compact('sliders'));
+        // $sliders = Slider::all();
+
+        $sliders = Slider::with(['unit'])->paginate('10');
+        $units = Unit::all();
+
+        $slidersCount = Slider::count();  // Menghitung jumlah posts
+
+        return view('superadmin.slider.index', compact('units', 'sliders', 'slidersCount'));
     }
     // Function Menyimpan Data Slider
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
-            'unit' => 'nullable|string|max:255',
+            'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'status' => 'required|in:active,inactive',
         ]);
@@ -36,7 +44,7 @@ class SliderController extends Controller
         // Simpan data ke database
         Slider::create([
             'title' => $validated['title'],
-            'unit' => $validated['unit'],
+            'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,
             'status' => $validated['status'],
         ]);
@@ -52,7 +60,7 @@ class SliderController extends Controller
         // Validasi data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'unit' => 'nullable|string|max:255',
+            'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|in:active,inactive',
         ]);
@@ -67,7 +75,7 @@ class SliderController extends Controller
         // Update data video
         $sliders->update([
             'title' => $validated['title'],
-            'unit' => $validated['unit'],
+            'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,
             'status' => $validated['status'],
         ]);

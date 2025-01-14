@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->string('title');  // Kolom untuk judul video
-            $table->string('unit')->nullable();  // Kolom untuk unit, nullable jika tidak wajib
+            $table->bigInteger('unit_id')->unsigned(); // ID Unit
             $table->string('image')->nullable();  // Kolom untuk menyimpan nama file gambar, nullable jika tidak ada gambar
             $table->enum('status', ['Active', 'Inactive'])->default('Inactive');  // Kolom status, bisa aktif atau nonaktif
             $table->string('url');  // Kolom untuk URL video

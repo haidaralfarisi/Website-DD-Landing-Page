@@ -28,15 +28,11 @@ class User extends Authenticatable
         'avatar'
     ];
 
-    // public function posts()
-    // {
-    //     return $this->hasMany(Post::class, 'user_id', 'id');
-    // }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
 
-    // public function categories()
-    // {
-    //     return $this->hasMany(Categories::class, 'user_id', 'id');
-    // }
 
     /**
      * The attributes that should be hidden for serialization.

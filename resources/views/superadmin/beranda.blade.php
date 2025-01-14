@@ -6,7 +6,7 @@
         <div class="container col-xxl-9">
             <div>
                 <p class="mb-1 text-dark">Selamat datang di</p>
-                <h4 class="font-inter text-dark fw-bold">Dashboard Website Dian Didaktika</h4>
+                <h4 class="font-inter text-dark fw-bold">Dashboard Super Admin Dian Didaktika</h4>
             </div>
         </div>
     </section>

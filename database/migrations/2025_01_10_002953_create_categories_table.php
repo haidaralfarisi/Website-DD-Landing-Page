@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('unit')->nullable();
+            $table->bigInteger('unit_id')->unsigned(); // ID Unit
             $table->timestamps();
         });
     }

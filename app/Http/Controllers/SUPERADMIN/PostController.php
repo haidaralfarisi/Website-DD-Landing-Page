@@ -16,10 +16,12 @@ class PostController extends Controller
     // Menampilkan Data Dari Post
     public function index()
     {
-        $posts = Post::with(['user', 'category', 'unit'])->get();
+        $posts = Post::with(['user', 'category', 'unit'])->paginate('10');
         $users = User::all();  // Mengambil semua user untuk dropdown
         $categories = Categories::all();  // Mengambil semua kategori untuk dropdown
         $units = Unit::all();
+
+        // $postsCount = Post::count();  // Menghitung jumlah posts
 
 
         return view('superadmin.post.index', compact('posts', 'users', 'categories', 'units'));

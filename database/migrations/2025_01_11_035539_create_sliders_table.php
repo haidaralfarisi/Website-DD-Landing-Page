@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sliders', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable(); // Judul Slider
-            $table->string('unit')->nullable();
+            $table->bigInteger('unit_id')->unsigned(); // ID Unit
             $table->string('image')->nullable(); // File gambar untuk slider
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();

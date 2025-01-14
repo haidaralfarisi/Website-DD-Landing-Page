@@ -14,4 +14,8 @@ class Categories extends Model
     {
         return $this->hasMany(Post::class, 'category_id', 'id');
     }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
 }

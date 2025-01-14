@@ -14,57 +14,66 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_superadmin')
+            {{-- @include('layouts.menu_superadmin') --}}
+
+            <div class="d-flex align-items-center mb-4">
+                <button onclick="window.location.href='{{ route('beranda') }}'" class="btn btn-secondary me-2">
+                    Kembali
+                </button>
+                {{-- <div class="me-2">|</div>
+                <div class="text-decoration-none me-2 fw-bold">Data Achievement</div> --}}
+            </div>
+            
 
             @include('layouts.alert')
 
             <div class="p-4 bg-white shadow-sm border rounded-3">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h5 class="fw-bold">Data Video </h5>
+                        <h5 class="fw-bold">Data Achievement </h5>
                     </div>
                     <div>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Tambah
-                            Video +</button>
+                            Achievement +</button>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered text-nowrap">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Judul Video</th>
+                                <th>Judul Achievement</th>
                                 <th>Unit</th>
                                 <th>Image</th>
                                 <th>Status</th>
-                                <th>URL</th>
+                                <th>Tgl Achievement</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($videos as $video)
+                            @foreach ($achievements as $achievement)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $video->title }}</td>
-                                    <td>{{ $video->unit }}</td>
+                                    <td>{{ $achievement->title }}</td>
+                                    <td>{{ $achievement->unit->name ?? 'Tidak Ada Unit' }}</td>
                                     <td>
-                                        @if ($video->image)
-                                            <img src="{{ asset('storage/' . $video->image) }}" alt="Video Image"
+                                        @if ($achievement->image)
+                                            <img src="{{ asset('storage/' . $achievement->image) }}" alt="Video Image"
                                                 width="50" height="50">
                                         @else
                                             <span>No Image</span>
                                         @endif
-                                    <td>{{ $video->status }}</td>
-                                    <td>{{ $video->url }}</td>
+                                    <td>{{ $achievement->status }}</td>
+                                    <td>{{ $achievement->achievement_date }}</td>
                                     <td>
                                         {{-- Tombol Edit --}}
                                         <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ $video->id }}">
+                                            data-bs-target="#editModal{{ $achievement->id }}">
                                             Edit
                                         </button>
 
                                         {{-- Tombol Hapus --}}
-                                        <form action="{{ route('video.destroy', $video->id) }}" method="POST"
+                                        <form action="{{ route('achievement.destroy', $achievement->id) }}" method="POST"
                                             class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -77,18 +86,18 @@
                                 <!-- Modal Untuk Edit User-->
                                 {{-- Modal harus di dalam foreach dan harus meletakkan {{ $user->id }} agar bisa di panggil sesuai id yang
                                 di inginkan --}}
-                                <div class="modal fade" id="editModal{{ $video->id }}" tabindex="-1"
+                                <div class="modal fade" id="editModal{{ $achievement->id }}" tabindex="-1"
                                     aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content p-3 border-0 rounded-4">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="editModalLabel">Edit Data Video</h1>
+                                                <h1 class="modal-title fs-5" id="editModalLabel">Edit Data Achievement</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form id="editVideoForm"
-                                                    action="{{ route('video.update', ['id' => $video->id]) }}"
+                                                <form id="editAchievementForm"
+                                                    action="{{ route('achievement.update', ['id' => $achievement->id]) }}"
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
@@ -97,16 +106,21 @@
                                                     <div class="mb-3">
                                                         <label for="title" class="form-label">Title</label>
                                                         <input type="text" class="form-control" id="title"
-                                                            name="title" value="{{ old('title', $video->title) }}"
+                                                            name="title" value="{{ old('title', $achievement->title) }}"
                                                             required>
                                                     </div>
 
-                                                    <!-- Nama -->
+                                                    <!-- Unit -->
                                                     <div class="mb-3">
-                                                        <label for="unit" class="form-label">Unit</label>
-                                                        <input type="text" class="form-control" id="unit"
-                                                            name="unit" value="{{ old('unit', $video->unit) }}"
-                                                            required>
+                                                        <label for="unit_id" class="form-label">Unit</label>
+                                                        <select class="form-select" id="unit_id" name="unit_id" required>
+                                                            @foreach ($units as $unit)
+                                                                <option value="{{ $unit->id }}"
+                                                                    {{ old('unit_id', $achievement->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
+                                                                    {{ $unit->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
 
                                                     <!-- Image -->
@@ -121,19 +135,22 @@
                                                         <label for="status" class="form-label">Status</label>
                                                         <select class="form-select" id="status" name="status" required>
                                                             <option value="active"
-                                                                {{ old('status', $video->status) == 'active' ? 'selected' : '' }}>
+                                                                {{ old('status', $achievement->status) == 'active' ? 'selected' : '' }}>
                                                                 Active</option>
                                                             <option value="inactive"
-                                                                {{ old('status', $video->status) == 'inactive' ? 'selected' : '' }}>
+                                                                {{ old('status', $achievement->status) == 'inactive' ? 'selected' : '' }}>
                                                                 Inactive</option>
                                                         </select>
                                                     </div>
 
-                                                    <!-- Url -->
+                                                    <!-- Achievement Date -->
                                                     <div class="mb-3">
-                                                        <label for="url" class="form-label">URL</label>
-                                                        <input type="text" class="form-control" id="url"
-                                                            name="url" value="{{ old('url', $video->url) }}" required>
+                                                        <label for="achievement_date" class="form-label">Achievement
+                                                            Date</label>
+                                                        <input type="date" class="form-control" id="achievement_date"
+                                                            name="achievement_date"
+                                                            value="{{ old('achievement_date', $achievement->achievement_date) }}"
+                                                            required>
                                                     </div>
 
                                                     <div class="modal-footer">
@@ -151,6 +168,7 @@
 
                         </tbody>
                     </table>
+                    {{$achievements->links()}}
                 </div>
             </div>
 
@@ -163,30 +181,33 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-3 border-0 rounded-4">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createModalLabel">Tambah Unit</h1>
+                    <h1 class="modal-title fs-5" id="createModalLabel">Tambah Achievement</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('video.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('achievement.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        <!-- Nama Video -->
+                        <!-- Nama achievement -->
                         <div class="mb-3">
-                            <label for="title" class="form-label">Judul Video</label>
+                            <label for="title" class="form-label">Judul Achievement</label>
                             <input type="text" class="form-control" id="title" name="title"
-                                placeholder="Judul Video" required>
+                                placeholder="Judul Achievement" required>
                         </div>
 
                         <!-- Unit -->
                         <div class="mb-3">
-                            <label for="unit" class="form-label">Unit</label>
-                            <input type="text" class="form-control" id="unit" name="unit" placeholder="Unit"
-                                required>
+                            <label for="unit_id" class="form-label">Unit</label>
+                            <select name="unit_id" id="unit_id" class="form-select">
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        <!-- Gambar -->
+                        <!-- Image -->
                         <div class="mb-3">
-                            <label for="image" class="form-label">Gambar</label>
+                            <label for="image" class="form-label">Image</label>
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
                         </div>
 
@@ -199,11 +220,11 @@
                             </select>
                         </div>
 
-                        <!-- URL -->
+                        <!-- Tanggal Pencapaian -->
                         <div class="mb-3">
-                            <label for="url" class="form-label">URL Video</label>
-                            <input type="url" class="form-control" id="url" name="url"
-                                placeholder="URL Video" required>
+                            <label for="achievement_date" class="form-label">Tanggal Pencapaian</label>
+                            <input type="date" class="form-control" id="achievement_date" name="achievement_date"
+                                placeholder="Tanggal pencapaian" required>
                         </div>
 
                         <div class="modal-footer">

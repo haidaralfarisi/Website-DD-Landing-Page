@@ -11,5 +11,8 @@ class Achievement extends Model
 
     protected $guarded = ['id'];
 
-    
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
 }

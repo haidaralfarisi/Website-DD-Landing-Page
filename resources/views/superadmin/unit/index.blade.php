@@ -14,7 +14,15 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_superadmin')
+            {{-- @include('layouts.menu_superadmin') --}}
+
+            <div class="d-flex align-items-center mb-4">
+                <button onclick="window.location.href='{{ route('beranda') }}'" class="btn btn-secondary me-2">
+                    Kembali
+                </button>
+                {{-- <div class="me-2">|</div>
+                <div class="text-decoration-none me-2 fw-bold">Data Achievement</div> --}}
+            </div>
 
             @include('layouts.alert')
 
@@ -29,7 +37,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered text-nowrap">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -100,6 +108,7 @@
                         </tbody>
                     </table>
                 </div>
+                {{$units->links()}}
             </div>
 
         </div>

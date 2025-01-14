@@ -14,7 +14,15 @@
     <section class="py-4">
         <div class="container col-xxl-9">
 
-            @include('layouts.menu_superadmin')
+            {{-- @include('layouts.menu_superadmin') --}}
+
+            <div class="d-flex align-items-center mb-4">
+                <button onclick="window.location.href='{{ route('beranda') }}'" class="btn btn-secondary me-2">
+                    Kembali
+                </button>
+                {{-- <div class="me-2">|</div>
+                <div class="text-decoration-none me-2 fw-bold">Data Achievement</div> --}}
+            </div>
 
             @include('layouts.alert')
 
@@ -29,7 +37,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered text-nowrap">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -59,7 +67,7 @@
                                             <span>No Avatar</span>
                                         @endif
                                     </td>
-                                    <td>{{ $user->unit }}</td>
+                                    <td>{{ $user->unit->name ?? 'Tidak Ada Unit' }}</td>
                                     <td>{{ $user->level }}</td>
                                     <td>
 
@@ -96,12 +104,14 @@
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
+
                                                     <!-- Nama -->
                                                     <div class="mb-3">
                                                         <label for="name" class="form-label">Nama</label>
                                                         <input type="text" class="form-control" id="name"
                                                             name="name" value="{{ old('name', $user->name) }}" required>
                                                     </div>
+
                                                     <!-- Email -->
                                                     <div class="mb-3">
                                                         <label for="email" class="form-label">Email</label>
@@ -109,12 +119,14 @@
                                                             name="email" value="{{ old('email', $user->email) }}"
                                                             required>
                                                     </div>
+
                                                     <!-- NIP -->
                                                     <div class="mb-3">
                                                         <label for="nip" class="form-label">NIP</label>
                                                         <input type="text" class="form-control" id="nip"
                                                             name="nip" value="{{ old('nip', $user->nip) }}" required>
                                                     </div>
+
                                                     <!-- Name Label -->
                                                     <div class="mb-3">
                                                         <label for="name_label" class="form-label">Label Nama</label>
@@ -122,12 +134,14 @@
                                                             name="name_label"
                                                             value="{{ old('name_label', $user->name_label) }}">
                                                     </div>
+
                                                     <!-- Avatar -->
                                                     <div class="mb-3">
                                                         <label for="avatar" class="form-label">Avatar</label>
                                                         <input type="file" class="form-control" id="avatar"
                                                             name="avatar" accept="image/*">
                                                     </div>
+
                                                     <!-- Level -->
                                                     <div class="mb-3">
                                                         <label for="level" class="form-label">Level</label>
@@ -141,13 +155,20 @@
                                                             </option>
                                                         </select>
                                                     </div>
+
                                                     <!-- Unit -->
                                                     <div class="mb-3">
-                                                        <label for="unit" class="form-label">Unit</label>
-                                                        <input type="text" class="form-control" id="unit"
-                                                            name="unit" value="{{ old('unit', $user->unit) }}"
-                                                            required>
+                                                        <label for="unit_id" class="form-label">Unit</label>
+                                                        <select class="form-select" id="unit_id" name="unit_id" required>
+                                                            @foreach ($units as $unit)
+                                                                <option value="{{ $unit->id }}"
+                                                                    {{ old('unit_id', $user->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
+                                                                    {{ $unit->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
+
                                                     <!-- Password -->
                                                     <div class="mb-3">
                                                         <label for="password" class="form-label">Password</label>
@@ -155,6 +176,7 @@
                                                             name="password"
                                                             placeholder="Kosongkan jika tidak ingin mengubah password">
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Tutup</button>
@@ -170,6 +192,7 @@
 
                         </tbody>
                     </table>
+                    {{$users->links()}}
                 </div>
             </div>
 
@@ -188,30 +211,42 @@
                 <div class="modal-body">
                     <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+
+                        <!-- Nama -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
                             <input type="text" class="form-control" id="name" name="name"
                                 placeholder="Nama lengkap" required>
                         </div>
+
+                        <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email"
                                 placeholder="Email" required>
                         </div>
+
+                        <!-- NIP -->
                         <div class="mb-3">
                             <label for="nip" class="form-label">NIP</label>
                             <input type="text" class="form-control" id="nip" name="nip" placeholder="NIP"
                                 required>
                         </div>
+
+                        <!-- Label name -->
                         <div class="mb-3">
                             <label for="name_label" class="form-label">Label Nama</label>
                             <input type="text" class="form-control" id="name_label" name="name_label"
                                 placeholder="Label Nama">
                         </div>
+
+                        <!-- Avatar -->
                         <div class="mb-3">
                             <label for="avatar" class="form-label">Avatar</label>
                             <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
                         </div>
+
+                        <!-- Level -->
                         <div class="mb-3">
                             <label for="level" class="form-label">Level</label>
                             <select class="form-select" id="level" name="level" required>
@@ -219,21 +254,30 @@
                                 <option value="admin">Admin</option>
                             </select>
                         </div>
+
+                        <!-- Unit -->
                         <div class="mb-3">
-                            <label for="unit" class="form-label">Unit</label>
-                            <input type="text" class="form-control" id="unit" name="unit" placeholder="Unit"
-                                required>
+                            <label for="unit_id" class="form-label">Unit</label>
+                            <select name="unit_id" id="unit_id" class="form-select">
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+
+                        <!-- Password -->
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
 
+                        <!-- Confirm Password -->
                         <div class="mb-3">
                             <label for="password_confirmation" class="form-label">Confirm Password</label>
                             <input type="password" class="form-control" id="password_confirmation"
                                 name="password_confirmation" required>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>

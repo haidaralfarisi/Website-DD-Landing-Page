@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ADMIN\BerandaAdminController;
 use App\Http\Controllers\ADMIN\PostController as ADMINPOST;
-
+use App\Http\Controllers\SUPERADMIN\AchievementController;
 use App\Http\Controllers\SUPERADMIN\BerandaSuperAdminController;
 use App\Http\Controllers\SUPERADMIN\UserController;
 use App\Http\Controllers\SUPERADMIN\CategoryController;
@@ -13,7 +13,7 @@ use App\Http\Controllers\SUPERADMIN\SliderController;
 use App\Http\Controllers\SUPERADMIN\UnitController;
 use App\Http\Controllers\SUPERADMIN\VideoController;
 use App\Http\Controllers\SUPERADMIN\PostController as SUPERADMINPOST;
-
+use App\Models\Achievement;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,9 +67,6 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::put('/video/{id}', [VideoController::class, 'update'])->name('video.update');
 
     # Untuk Aksi Data Post
-    // Route::get('/post', function () {
-    //     return 'yaa';
-    // })->name('superadmin.posts.index');
     Route::get('/post', [SUPERADMINPOST::class, 'index'])->name('superadmin.posts.index');
     Route::post('/post', [SUPERADMINPOST::class, 'store'])->name('superadmin.posts.store');
     Route::delete('/post/{id}', [SUPERADMINPOST::class, 'destroy'])->name('superadmin.posts.destroy');
@@ -80,6 +77,12 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::post('/slider', [SliderController::class, 'store'])->name('slider.store');
     Route::delete('/slider/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
     Route::put('/slider/{id}', [SliderController::class, 'update'])->name('slider.update');
+
+    # Untuk Aksi Data Achievement
+    Route::get('/achievement', [AchievementController::class, 'index'])->name('achievement.index');
+    Route::post('/achievement', [AchievementController::class, 'store'])->name('achievement.store');
+    Route::delete('/achievement/{id}', [AchievementController::class, 'destroy'])->name('achievement.destroy');
+    Route::put('/achievement/{id}', [AchievementController::class, 'update'])->name('achievement.update');
 });
 
 # Admin
