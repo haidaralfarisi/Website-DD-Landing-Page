@@ -19,7 +19,7 @@ return new class extends Migration
         $table->text('meta_description')->nullable(); // Meta Deskripsi
         $table->string('meta_thumbnail')->nullable(); // Meta Thumbnail
         $table->string('image')->nullable(); // Image
-        $table->text('description')->nullable(); // Deskripsi
+        $table->text('desc')->nullable(); // Deskripsi
         $table->date('publish_date')->nullable(); // Tanggal Publish
         $table->enum('status', ['active', 'inactive'])->default('active'); // Status
         $table->bigInteger('unit_id')->unsigned(); // ID Unit

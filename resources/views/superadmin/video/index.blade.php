@@ -54,7 +54,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $video->title }}</td>
-                                    <td>{{ $video->unit->name ?? 'Tidak Ada Unit' }}</td>
+                                    <td>{{ $video->unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
                                     <td>
                                         @if ($video->image)
                                             <img src="{{ asset('storage/' . $video->image) }}" alt="Video Image"
@@ -114,9 +114,9 @@
                                                         <label for="unit_id" class="form-label">Unit</label>
                                                         <select class="form-select" id="unit_id" name="unit_id" required>
                                                             @foreach ($units as $unit)
-                                                                <option value="{{ $unit->id }}" 
+                                                                <option value="{{ $unit->id }}"
                                                                     {{ old('unit_id', $video->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
-                                                                    {{ $unit->name }}
+                                                                    {{ $unit->nama_unit }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -164,7 +164,7 @@
 
                         </tbody>
                     </table>
-                    {{$videos->links()}}
+                    {{ $videos->links() }}
                 </div>
             </div>
 
@@ -195,8 +195,9 @@
                         <div class="mb-3">
                             <label for="unit_id" class="form-label">Unit</label>
                             <select name="unit_id" id="unit_id" class="form-select">
+                                <option value="" disabled selected>Pilih Nama Unit</option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                    <option value="{{ $unit->id }}">{{ $unit->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -211,6 +212,7 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
+                                <option value="" disabled selected>Pilih Status</option>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
                             </select>

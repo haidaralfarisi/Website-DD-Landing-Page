@@ -9,6 +9,8 @@ use App\Http\Controllers\SUPERADMIN\AchievementController;
 use App\Http\Controllers\SUPERADMIN\BerandaSuperAdminController;
 use App\Http\Controllers\SUPERADMIN\UserController;
 use App\Http\Controllers\SUPERADMIN\CategoryController;
+use App\Http\Controllers\SUPERADMIN\FacilityController;
+use App\Http\Controllers\SUPERADMIN\PostCategoryController;
 use App\Http\Controllers\SUPERADMIN\SliderController;
 use App\Http\Controllers\SUPERADMIN\UnitController;
 use App\Http\Controllers\SUPERADMIN\VideoController;
@@ -48,10 +50,10 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 
     # Untuk Aksi Data Category
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::get('/postcategories', [PostCategoryController::class, 'index'])->name('postcategories.index');
+    Route::post('/postcategories', [PostCategoryController::class, 'store'])->name('postcategories.store');
+    Route::delete('/postcategories/{id}', [PostCategoryController::class, 'destroy'])->name('postcategories.destroy');
+    Route::put('/postcategories/{id}', [PostCategoryController::class, 'update'])->name('postcategories.update');
 
     # Untuk Aksi Data Unit
     Route::get('/unit', [UnitController::class, 'index'])->name('unit.index');
@@ -83,6 +85,12 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
     Route::post('/achievement', [AchievementController::class, 'store'])->name('achievement.store');
     Route::delete('/achievement/{id}', [AchievementController::class, 'destroy'])->name('achievement.destroy');
     Route::put('/achievement/{id}', [AchievementController::class, 'update'])->name('achievement.update');
+
+    # Untuk Aksi Data Fasilitas
+    Route::get('/facility', [FacilityController::class, 'index'])->name('facility.index');
+    Route::post('/facility', [FacilityController::class, 'store'])->name('facility.store');
+    Route::delete('/facility/{id}', [FacilityController::class, 'destroy'])->name('facility.destroy');
+    Route::put('/facility/{id}', [FacilityController::class, 'update'])->name('facility.update');
 });
 
 # Admin

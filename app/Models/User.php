@@ -21,14 +21,14 @@ class User extends Authenticatable
         'name',
         'email',
         'nip',
-        'name_label',
+        'avatar',
         'level',
-        'unit',
+        'unit_id',
         'password',
         'avatar'
     ];
 
-    public function unit()
+    public function units()
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }

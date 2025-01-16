@@ -29,11 +29,11 @@
             <div class="p-4 bg-white shadow-sm border rounded-3">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h5 class="fw-bold">Data Unit </h5>
+                        <h5 class="fw-bold">Data Category </h5>
                     </div>
                     <div>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Tambah
-                            Unit +</button>
+                            Category +</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -41,25 +41,29 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Unit</th>
+                                <th>Nama Post Category</th>
+                                <th>Unit</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($units as $unit)
+                            @foreach ($postcategories as $postcategory)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
+                                    <td>{{ $postcategory->name }}</td>
+                                    <td>{{ $postcategory->units->nama_unit ?? 'Tidak Ada Unit' }}</td>
+
+                                    {{-- <td>{{ $postcategory->unit->name ?? 'Tidak Ada Unit' }}</td> --}}
                                     <td>
                                         {{-- Tombol Edit --}}
                                         <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ $unit->id }}">
+                                            data-bs-target="#editModal{{ $postcategory->id }}">
                                             Edit
                                         </button>
 
                                         {{-- Tombol Hapus --}}
-                                        <form action="{{ route('unit.destroy', $unit->id) }}" method="POST"
-                                            class="d-inline">
+                                        <form action="{{ route('postcategories.destroy', $postcategory->id) }}"
+                                            method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" onclick="return confirm('Yakin mau dihapus?')"
@@ -71,28 +75,63 @@
                                 <!-- Modal Untuk Edit User-->
                                 {{-- Modal harus di dalam foreach dan harus meletakkan {{ $user->id }} agar bisa di panggil sesuai id yang
                                 di inginkan --}}
-                                <div class="modal fade" id="editModal{{ $unit->id }}" tabindex="-1"
+                                <div class="modal fade" id="editModal{{ $postcategory->id }}" tabindex="-1"
                                     aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content p-3 border-0 rounded-4">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="editModalLabel">Edit Unit</h1>
+                                                <h1 class="modal-title fs-5" id="editModalLabel">Edit Post Category</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form id="editUnitForm"
-                                                    action="{{ route('unit.update', ['id' => $unit->id]) }}"
+                                                <form id="editCategoryForm"
+                                                    action="{{ route('postcategories.update', ['id' => $postcategory->id]) }}"
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
 
                                                     <!-- Nama -->
                                                     <div class="mb-3">
-                                                        <label for="nama_unit" class="form-label">Nama</label>
-                                                        <input type="text" class="form-control" id="nama_unit"
-                                                            name="nama_unit" value="{{ old('nama_unit', $unit->nama_unit) }}" required>
+                                                        <label for="name" class="form-label">Nama</label>
+                                                        <input type="text" class="form-control" id="name"
+                                                            name="name" value="{{ old('name', $postcategory->name) }}"
+                                                            required>
                                                     </div>
+
+                                                    <!-- Unit -->
+                                                    <div class="mb-3">
+                                                        <label for="unit_id" class="form-label">Unit</label>
+                                                        <select class="form-select" id="unit_id" name="unit_id" required>
+                                                            @foreach ($units as $unit)
+                                                                <option value="{{ $unit->id }}"
+                                                                    {{ old('unit_id', $postcategory->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
+                                                                    {{ $unit->nama_unit }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+
+                                                    {{-- <!-- Unit -->
+                                                    <div class="mb-3">
+                                                        <label for="unit" class="form-label">Unit</label>
+                                                        <input type="unit" class="form-control" id="unit"
+                                                            name="unit" value="{{ old('unit', $category->unit) }}"
+                                                            required>
+                                                    </div> --}}
+
+                                                    {{-- <div class="mb-3">
+                                                        <label for="unit_id" class="form-label">Unit</label>
+                                                        <select class="form-select" id="unit_id" name="unit_id" required>
+                                                            @foreach ($units as $unit)
+                                                                <option value="{{ $unit->id }}"
+                                                                    {{ old('unit_id', $postcategory->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
+                                                                    {{ $unit->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div> --}}
 
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
@@ -109,30 +148,42 @@
 
                         </tbody>
                     </table>
+                    {{ $postcategories->links() }}
                 </div>
-                {{$units->links()}}
             </div>
 
         </div>
     </section>
 
 
-    <!-- Modal Untuk Create Unit-->
+    <!-- Modal Untuk Create Category-->
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-3 border-0 rounded-4">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createModalLabel">Tambah Unit</h1>
+                    <h1 class="modal-title fs-5" id="createModalLabel">Tambah Category</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('unit.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('postcategories.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
-                            <label for="nama_unit" class="form-label">Nama Unit</label>
-                            <input type="text" class="form-control" id="nama_unit" name="nama_unit"
-                                placeholder="Nama Unit" required>
+                            <label for="name" class="form-label">Nama Category</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="Nama Category" required>
                         </div>
+
+                        <!-- Unit -->
+                        <div class="mb-3">
+                            <label for="unit_id" class="form-label">Unit</label>
+                            <select name="unit_id" id="unit_id" class="form-select">
+                                <option value="" disabled selected>Pilih Nama Unit</option>
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->nama_unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>

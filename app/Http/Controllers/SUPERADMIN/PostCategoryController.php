@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\SUPERADMIN;
 
 use App\Http\Controllers\Controller;
-use App\Models\Categories;
+use App\Models\PostCategories;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class PostCategoryController extends Controller
 {
     // Menampilkan Data Categori
     public function index()
     {
-        // $categories = Categories::all();
 
-        $categories = Categories::with(['unit'])->paginate('10');
+        $postcategories = PostCategories::with(['units'])->paginate('10');
+
         $units = Unit::all();
 
-        $categoriesCount = Categories::count();  // Menghitung jumlah slider
+        $postcategoriesCount = PostCategories::count();  // Menghitung jumlah slider
 
 
-        return view('superadmin.category.index', compact('units', 'categories', 'categoriesCount'));
+        return view('superadmin.postcategory.index', compact('units', 'postcategories', 'postcategoriesCount'));
     }
 
     // Menyimpan Data kategori baru
@@ -39,10 +39,10 @@ class CategoryController extends Controller
         ];
 
         // Simpan data ke database
-        Categories::create($data);
+        PostCategories::create($data);
 
         // Redirect kembali dengan pesan sukses
-        return redirect()->back()->with('success', 'Category berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Post Category berhasil ditambahkan.');
     }
 
     // Memperbarui kategori
@@ -53,30 +53,27 @@ class CategoryController extends Controller
             'unit_id' => 'required|exists:units,id', // pastikan unit_id valid
         ]);
 
-        $category = Categories::findOrFail($id);
+        $postcategories = PostCategories::findOrFail($id);
 
-        $data = [
-            'name' => $validated['name'],
-            'unit_id' => $validated['unit_id'],
-        ];
+        $postcategories->update($validated);
 
-        $category->update($data);
-        $category->update($request->all());
+        // $postcategories->update($data);
+        // $postcategories->update($request->all());
         
         // Redirect dengan pesan sukses
-        return redirect()->back()->with('success', 'Category berhasil diubah.');
+        return redirect()->back()->with('success', 'Post Category berhasil diubah.');
     }
 
     // Menghapus Data kategori
     public function destroy($id)
     {
         // Cari data kategori berdasarkan ID
-        $category = Categories::findOrFail($id);
+        $postcategories = PostCategories::findOrFail($id);
 
         // Hapus data
-        $category->delete();
+        $postcategories->delete();
 
         // Redirect dengan pesan sukses
-        return redirect()->back()->with('success', 'Category berhasil dihapus.');
+        return redirect()->back()->with('success', 'Post Category berhasil dihapus.');
     }
 }

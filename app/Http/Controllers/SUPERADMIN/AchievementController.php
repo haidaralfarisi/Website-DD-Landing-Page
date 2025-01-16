@@ -19,6 +19,8 @@ class AchievementController extends Controller
 
 
         return view('superadmin.achievement.index', compact('units', 'achievements', 'achievementsCount'));
+
+        
     }
 
     public function store(Request $request)
@@ -27,6 +29,7 @@ class AchievementController extends Controller
             'title' => 'nullable|string|max:255',
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'desc' => 'nullable|string', // Validasi untuk kolom longtext
             'status' => 'required|in:active,inactive',
             'achievement_date' => 'required|date', // Pastikan tanggal pencapaian valid
         ]);
@@ -43,6 +46,7 @@ class AchievementController extends Controller
             'title' => $validated['title'],
             'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,
+            'desc' => $validated['desc'],
             'status' => $validated['status'],
             'achievement_date' => $validated['achievement_date'], // Simpan tanggal pencapaian
         ]);
@@ -59,6 +63,7 @@ class AchievementController extends Controller
             'title' => 'required|string|max:255',
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'desc' => 'nullable|string', // Validasi untuk kolom longtext
             'status' => 'required|in:active,inactive',
             'achievement_date' => 'nullable|date',
 
@@ -76,6 +81,7 @@ class AchievementController extends Controller
             'title' => $validated['title'],
             'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,
+            'desc' => $validated['desc'],
             'status' => $validated['status'],
             'achievement_date' => $validated['achievement_date'], // Simpan tanggal pencapaian
         ]);

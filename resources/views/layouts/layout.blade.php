@@ -41,7 +41,8 @@
     {{-- Top Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white py-2 shadow">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('beranda') }}">
+            <a class="navbar-brand" href="#">
+                {{-- <a class="navbar-brand" href="{{ route(name: 'beranda') }}"> --}}
                 <img src="{{ asset('assets/icons/ic-logo.svg') }}" height="40" alt="">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

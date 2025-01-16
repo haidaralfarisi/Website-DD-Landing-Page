@@ -31,7 +31,7 @@ class SliderController extends Controller
             'title' => 'nullable|string|max:255',
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:Active,Inactive',
         ]);
 
         // Upload file image jika ada
@@ -62,7 +62,7 @@ class SliderController extends Controller
             'title' => 'required|string|max:255',
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:Active,Inactive',
         ]);
 
         // Menyimpan gambar jika ada

@@ -16,9 +16,9 @@ class Unit extends Model
         return $this->hasMany(Post::class, 'unit_id', 'id');
     }
 
-    public function categories()
+    public function postcategories()
     {
-        return $this->hasMany(Categories::class, 'unit_id', 'id');
+        return $this->hasMany(PostCategories::class, 'unit_id', 'id');
     }
 
     public function slider()
@@ -40,6 +40,11 @@ class Unit extends Model
     public function achievement()
     {
         return $this->hasMany(User::class, 'unit_id', 'id');
+    }
+
+    public function facility()
+    {
+        return $this->hasMany(Facility::class, 'unit_id', 'id');
     }
 
 }

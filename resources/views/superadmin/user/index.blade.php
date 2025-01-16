@@ -44,7 +44,6 @@
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>NIP</th>
-                                <th>Nama Label</th>
                                 <th>Avatar</th>
                                 <th>Unit</th>
                                 <th>Level</th>
@@ -58,7 +57,6 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->nip }}</td>
-                                    <td>{{ $user->name_label }}</td>
                                     <td>
                                         @if ($user->avatar)
                                             <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" width="50"
@@ -67,7 +65,7 @@
                                             <span>No Avatar</span>
                                         @endif
                                     </td>
-                                    <td>{{ $user->unit->name ?? 'Tidak Ada Unit' }}</td>
+                                    <td>{{ $user->units->nama_unit ?? 'Tidak Ada Unit' }}</td>
                                     <td>{{ $user->level }}</td>
                                     <td>
 
@@ -127,14 +125,6 @@
                                                             name="nip" value="{{ old('nip', $user->nip) }}" required>
                                                     </div>
 
-                                                    <!-- Name Label -->
-                                                    <div class="mb-3">
-                                                        <label for="name_label" class="form-label">Label Nama</label>
-                                                        <input type="text" class="form-control" id="name_label"
-                                                            name="name_label"
-                                                            value="{{ old('name_label', $user->name_label) }}">
-                                                    </div>
-
                                                     <!-- Avatar -->
                                                     <div class="mb-3">
                                                         <label for="avatar" class="form-label">Avatar</label>
@@ -146,12 +136,12 @@
                                                     <div class="mb-3">
                                                         <label for="level" class="form-label">Level</label>
                                                         <select class="form-select" id="level" name="level" required>
-                                                            <option value="superadmin"
-                                                                {{ $user->level == 'superadmin' ? 'selected' : '' }}>
-                                                                Superadmin
+                                                            <option value="SUPERADMIN"
+                                                                {{ $user->level == 'SUPERADMIN' ? 'selected' : '' }}>
+                                                                SUPERADMIN
                                                             </option>
-                                                            <option value="admin"
-                                                                {{ $user->level == 'admin' ? 'selected' : '' }}>Admin
+                                                            <option value="ADMIN"
+                                                                {{ $user->level == 'ADMIN' ? 'selected' : '' }}>ADMIN
                                                             </option>
                                                         </select>
                                                     </div>
@@ -163,11 +153,12 @@
                                                             @foreach ($units as $unit)
                                                                 <option value="{{ $unit->id }}"
                                                                     {{ old('unit_id', $user->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
-                                                                    {{ $unit->name }}
+                                                                    {{ $unit->nama_unit }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
+
 
                                                     <!-- Password -->
                                                     <div class="mb-3">
@@ -192,7 +183,7 @@
 
                         </tbody>
                     </table>
-                    {{$users->links()}}
+                    {{ $users->links() }}
                 </div>
             </div>
 
@@ -233,13 +224,6 @@
                                 required>
                         </div>
 
-                        <!-- Label name -->
-                        <div class="mb-3">
-                            <label for="name_label" class="form-label">Label Nama</label>
-                            <input type="text" class="form-control" id="name_label" name="name_label"
-                                placeholder="Label Nama">
-                        </div>
-
                         <!-- Avatar -->
                         <div class="mb-3">
                             <label for="avatar" class="form-label">Avatar</label>
@@ -250,8 +234,9 @@
                         <div class="mb-3">
                             <label for="level" class="form-label">Level</label>
                             <select class="form-select" id="level" name="level" required>
-                                <option value="superadmin">Superadmin</option>
-                                <option value="admin">Admin</option>
+                                <option value="" disabled selected>Pilih Level</option>
+                                <option value="SUPERADMIN">SUPERADMIN</option>
+                                <option value="ADMIN">ADMIN</option>
                             </select>
                         </div>
 
@@ -259,8 +244,9 @@
                         <div class="mb-3">
                             <label for="unit_id" class="form-label">Unit</label>
                             <select name="unit_id" id="unit_id" class="form-select">
+                                <option value="" disabled selected>Pilih Nama Unit</option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                    <option value="{{ $unit->id }}">{{ $unit->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>

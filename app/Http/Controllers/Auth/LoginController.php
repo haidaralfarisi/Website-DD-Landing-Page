@@ -43,9 +43,9 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         // Redirect based on user level
-        if ($user->level == 'superadmin') {
+        if ($user->level == 'SUPERADMIN') {
             return redirect()->route('beranda'); // Sesuaikan dengan route yang ada
-        } elseif ($user->level == 'admin') {
+        } elseif ($user->level == 'ADMIN') {
             return redirect()->route('admin.posts.index'); // Sesuaikan dengan route yang ada
         }
 

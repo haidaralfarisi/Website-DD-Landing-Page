@@ -5,7 +5,9 @@ namespace App\Http\Controllers\SUPERADMIN;
 use App\Http\Controllers\Controller;
 use App\Models\Achievement;
 use App\Models\Categories;
+use App\Models\Facility;
 use App\Models\Post;
+use App\Models\PostCategories;
 use App\Models\Slider;
 use App\Models\Unit;
 use App\Models\User; // Import model User
@@ -23,7 +25,7 @@ class BerandaSuperAdminController extends Controller
         $usersCount = User::count();
 
         // Hitung jumlah data categories
-        $categoriesCount = Categories::count();
+        $postcategoriesCount = PostCategories::count();
 
         $unitsCount = Unit::count();
 
@@ -38,17 +40,21 @@ class BerandaSuperAdminController extends Controller
 
         $achievementsCount = Achievement::count();
 
+        $facilitiesCount = Facility::count();
+
+
 
         // Kirim data ke view
         return view('superadmin.beranda', compact(
             'users',
             'usersCount',
             'unitsCount',
-            'categoriesCount',
+            'postcategoriesCount',
             'postsCount',
             'slidersCount',
             'videosCount',
-            'achievementsCount'
+            'achievementsCount',
+            'facilitiesCount',
         ));
     }
 }

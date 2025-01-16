@@ -24,11 +24,11 @@ class EnsureUserRole
         }
 
         // Cek role berdasarkan level yang diberikan
-        if ($role == 'superadmin' && $user->level != 'superadmin') {
+        if ($role == 'SUPERADMIN' && $user->level != 'SUPERADMIN') {
             abort(403, 'Forbidden');
         }
 
-        if ($role == 'admin' && $user->level != 'admin') {
+        if ($role == 'ADMIN' && $user->level != 'ADMIN') {
             abort(403, 'Forbidden');
         }
 

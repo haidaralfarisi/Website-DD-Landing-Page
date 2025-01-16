@@ -23,7 +23,7 @@
                 {{-- <div class="me-2">|</div>
                 <div class="text-decoration-none me-2 fw-bold">Data Achievement</div> --}}
             </div>
-            
+
 
             @include('layouts.alert')
 
@@ -45,6 +45,7 @@
                                 <th>Judul Achievement</th>
                                 <th>Unit</th>
                                 <th>Image</th>
+                                <th>Deskripsi</th>
                                 <th>Status</th>
                                 <th>Tgl Achievement</th>
                                 <th>Aksi</th>
@@ -55,7 +56,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $achievement->title }}</td>
-                                    <td>{{ $achievement->unit->name ?? 'Tidak Ada Unit' }}</td>
+                                    <td>{{ $achievement->unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
                                     <td>
                                         @if ($achievement->image)
                                             <img src="{{ asset('storage/' . $achievement->image) }}" alt="Video Image"
@@ -63,6 +64,7 @@
                                         @else
                                             <span>No Image</span>
                                         @endif
+                                    <td>{{ $achievement->desc }}</td>
                                     <td>{{ $achievement->status }}</td>
                                     <td>{{ $achievement->achievement_date }}</td>
                                     <td>
@@ -117,7 +119,7 @@
                                                             @foreach ($units as $unit)
                                                                 <option value="{{ $unit->id }}"
                                                                     {{ old('unit_id', $achievement->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
-                                                                    {{ $unit->name }}
+                                                                    {{ $unit->nama_unit }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -129,6 +131,15 @@
                                                         <input type="file" class="form-control" id="image"
                                                             name="image" accept="image/*">
                                                     </div>
+
+                                                    <!-- Description -->
+                                                    <div class="mb-3">
+                                                        <label for="desc" class="form-label">Description</label>
+                                                        <textarea class="form-control" id="desc" name="desc" rows="5" required>
+                                                            {{ old('desc', $achievement->desc) }}
+                                                    </textarea>
+                                                    </div>
+
 
                                                     <!-- Status -->
                                                     <div class="mb-3">
@@ -168,7 +179,7 @@
 
                         </tbody>
                     </table>
-                    {{$achievements->links()}}
+                    {{ $achievements->links() }}
                 </div>
             </div>
 
@@ -199,8 +210,9 @@
                         <div class="mb-3">
                             <label for="unit_id" class="form-label">Unit</label>
                             <select name="unit_id" id="unit_id" class="form-select">
+                                <option value="" disabled selected>Pilih Nama Unit</option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                    <option value="{{ $unit->id }}">{{ $unit->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -211,10 +223,19 @@
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
                         </div>
 
+                        <!-- Deskripsi Achievement -->
+                        <div class="mb-3">
+                            <label for="desc" class="form-label">Deskripsi Achievement</label>
+                            <textarea class="form-control" id="desc" name="desc" placeholder="Deskripsi Achievement" rows="5"
+                                required></textarea>
+                        </div>
+
+
                         <!-- Status -->
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
+                                <option value="" disabled selected>Pilih Status</option>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
                             </select>

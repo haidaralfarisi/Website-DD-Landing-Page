@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Categories extends Model
+class PostCategories extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
@@ -14,7 +14,7 @@ class Categories extends Model
     {
         return $this->hasMany(Post::class, 'category_id', 'id');
     }
-    public function unit()
+    public function units()
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }

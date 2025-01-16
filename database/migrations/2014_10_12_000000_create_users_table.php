@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('id_google')->unique();
+            $table->string('nip')->unique();
+            $table->string('unit');
             $table->string('name');
             $table->string('email')->unique();
-            $table->bigInteger('nip')->unique()->nullable();
-            $table->string('name_label')->nullable();
-            $table->string('avatar')->nullable();
-            $table->bigInteger('unit_id')->unsigned(); // ID Unit
-            $table->enum('level', ['Superadmin', 'Admin'])->default('Superadmin');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('avatar')->nullable();
+            $table->string('level');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -12,7 +12,6 @@ body {
     font-weight: 600;
 }
 
-
 .nav {
     z-index: 999;
     position: fixed;
@@ -53,7 +52,6 @@ body {
 .nav__icon {
     font-size: 18px;
 }
-
 
 .bg-light-blue {
     background-color: #f4f7fd;
@@ -97,3 +95,9 @@ body {
     transform: translateY(-8px) scale(1.02);
 }
 
+.custom-width {
+    width: 100%; /* Sesuaikan dengan kebutuhan */
+    max-width: 1500px; /* Opsional: untuk membatasi lebar maksimum */
+    margin: 0 auto; /* Opsional: untuk memusatkan */
+    height: 70%;
+}

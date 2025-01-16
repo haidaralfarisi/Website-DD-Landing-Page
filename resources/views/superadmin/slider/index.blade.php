@@ -53,7 +53,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                         <td>{{ $slider->title }}</td>
-                                        <td>{{ $slider->unit->name ?? 'Tidak Ada Unit' }}</td>
+                                        <td>{{ $slider->unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
                                         <td>
                                             @if ($slider->image)
                                                 <img src="{{ asset('storage/' . $slider->image) }}" alt="Gambar"
@@ -115,7 +115,7 @@
                                                             @foreach ($units as $unit)
                                                                 <option value="{{ $unit->id }}" 
                                                                     {{ old('unit_id', $slider->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
-                                                                    {{ $unit->name }}
+                                                                    {{ $unit->nama_unit }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -132,11 +132,11 @@
                                                     <div class="mb-3">
                                                         <label for="status" class="form-label">Status</label>
                                                         <select class="form-select" id="status" name="status" required>
-                                                            <option value="active"
-                                                                {{ old('status', $slider->status) == 'active' ? 'selected' : '' }}>
+                                                            <option value="Active"
+                                                                {{ old('status', $slider->status) == 'Active' ? 'selected' : '' }}>
                                                                 Active</option>
-                                                            <option value="inactive"
-                                                                {{ old('status', $slider->status) == 'inactive' ? 'selected' : '' }}>
+                                                            <option value="Inactive"
+                                                                {{ old('status', $slider->status) == 'Inactive' ? 'selected' : '' }}>
                                                                 Inactive</option>
                                                         </select>
                                                     </div>
@@ -187,8 +187,9 @@
                         <div class="mb-3">
                             <label for="unit_id" class="form-label">Unit</label>
                             <select name="unit_id" id="unit_id" class="form-select">
+                                <option value="" disabled selected>Pilih Nama Unit</option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                    <option value="{{ $unit->id }}">{{ $unit->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -203,8 +204,9 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="" disabled selected>Pilih Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
                             </select>
                         </div>
 

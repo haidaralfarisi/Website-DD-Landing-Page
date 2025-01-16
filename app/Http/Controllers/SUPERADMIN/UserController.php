@@ -16,7 +16,8 @@ class UserController extends Controller
         // Ambil semua data pengguna dari tabel users
         // $users = User::all();
 
-        $users = User::with(['unit'])->paginate('10');
+        $users = User::with(['units'])->paginate('10');
+        
         $units = Unit::all();
 
         $usersCount = User::count();  // Menghitung jumlah User
@@ -32,9 +33,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'nip' => 'required|string|max:20',
-            'name_label' => 'nullable|string|max:255',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'level' => 'required|in:superadmin,admin',
+            'level' => 'required|in:SUPERADMIN,ADMIN',
             'unit_id' => 'required|exists:units,id',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -44,7 +44,6 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'nip' => $validated['nip'],
-            'name_label' => $validated['name_label'],
             'level' => $validated['level'],
             'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'password' => bcrypt($validated['password']),
@@ -84,8 +83,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'nip' => 'required|string|max:20',
-            'name_label' => 'nullable|string|max:255',
-            'level' => 'required|in:superadmin,admin',
+            'level' => 'required|in:SUPERADMIN,ADMIN',
             'unit_id' => 'required|exists:units,id',
             'password' => 'nullable|string|min:6|confirmed',  // Pastikan konfirmasi password
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Validasi untuk avatar
@@ -99,7 +97,6 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'nip' => $validated['nip'],
-            'name_label' => $validated['name_label'],
             'level' => $validated['level'],
             'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
         ];

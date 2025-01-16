@@ -37,22 +37,23 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered text-nowrap">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Judul Post</th>
+                                <th>Judul</th>
                                 <th>Slug</th>
                                 <th>Meta Keyword</th>
                                 <th>Meta Deskripsi</th>
                                 <th>Meta Thumbnail</th>
                                 <th>Image</th>
-                                <th>Deskripsi</th>
+                                {{-- <th>Deskripsi</th> --}}
                                 <th>Tanggal Publish</th>
+                                <th>Viewers</th>
                                 <th>Status</th>
-                                <th>Unit</th>
+                                <th>Unit id</th>
+                                <th>Post Category</th>
                                 <th>User Id</th>
-                                <th>Category Id</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -60,7 +61,7 @@
                             @foreach ($posts as $post)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $post->title }}</td>
+                                    <td style="max-width: 300px">{{ $post->title }}</td>
                                     <td>{{ $post->slug }}</td>
                                     <td>{{ $post->meta_keyword }}</td>
                                     <td>{{ $post->meta_description }}</td>
@@ -83,12 +84,14 @@
                                         @endif
                                     </td>
 
-                                    <td>{{ $post->description }}</td>
+                                    {{-- <td>{{ $post->desc }}</td> --}}
                                     <td>{{ $post->publish_date }}</td>
+                                    <td>{{ $post->viewers }}</td>
                                     <td>{{ $post->status }}</td>
-                                    <td>{{ $post->unit->name ?? 'No Unit' }}</td> <!-- Menampilkan nama unit -->
+                                    <td>{{ $post->unit->nama_unit ?? 'No Unit' }}</td> <!-- Menampilkan nama unit -->
+                                    <td>{{ $post->postcategory->name ?? 'No Category' }}</td>
+                                    <!-- Mengambil nama kategori -->
                                     <td>{{ $post->user->name ?? 'Unknown User' }}</td> <!-- Mengambil nama user -->
-                                    <td>{{ $post->category->name ?? 'No Category' }}</td> <!-- Mengambil nama kategori -->
                                     <td>
                                         {{-- Tombol Edit --}}
                                         <button class="btn btn-outline-primary" data-bs-toggle="modal"
@@ -170,11 +173,11 @@
                                                             name="image" accept="image/*">
                                                     </div>
 
-                                                    <!-- Description -->
+                                                    {{-- <!-- Description -->
                                                     <div class="mb-3">
                                                         <label for="description" class="form-label">Description</label>
                                                         <textarea class="form-control" id="description" name="description" rows="5">{{ old('description', $post->description) }}</textarea>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Publish Date -->
                                                     <div class="mb-3">
@@ -182,6 +185,14 @@
                                                         <input type="date" class="form-control" id="publish_date"
                                                             name="publish_date"
                                                             value="{{ old('publish_date', $post->publish_date) }}"
+                                                            required>
+                                                    </div>
+
+                                                    <!-- Viewers -->
+                                                    <div class="mb-3">
+                                                        <label for="viewers" class="form-label">Viewers</label>
+                                                        <input type="viewers" class="form-control" id="viewers"
+                                                            name="viewers" value="{{ old('title', $post->viewers) }}"
                                                             required>
                                                     </div>
 
@@ -207,7 +218,7 @@
                                                             @foreach ($units as $unit)
                                                                 <option value="{{ $unit->id }}"
                                                                     {{ old('unit_id', $post->unit_id) == $unit->id ? 'selected' : '' }}>
-                                                                    {{ $unit->name }}</option>
+                                                                    {{ $unit->nama_unit }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -225,7 +236,23 @@
                                                         </select>
                                                     </div>
 
-                                                    <!-- Category ID -->
+                                                    <!-- Post Category -->
+                                                    <div class="mb-3">
+                                                        <label for="post_category_id" class="form-label">Post
+                                                            Category</label>
+                                                        <select class="form-select" id="post_category_id"
+                                                            name="post_category_id" required>
+                                                            @foreach ($postcategories as $postcategory)
+                                                                <option value="{{ $postcategory->id }}"
+                                                                    {{ old('post_category_id', $post->post_category_id) == $postcategory->id ? 'selected' : '' }}>
+                                                                    {{ $postcategory->name }}</option>
+                                                                <!-- Ganti 'name' dengan nama kolom yang sesuai -->
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+
+                                                    {{-- <!-- Category ID -->
                                                     <div class="mb-3">
                                                         <label for="category_id" class="form-label">Category</label>
                                                         <select class="form-select" id="category_id" name="category_id"
@@ -236,7 +263,7 @@
                                                                     {{ $category->name }}</option>
                                                             @endforeach
                                                         </select>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
@@ -252,7 +279,7 @@
 
                         </tbody>
                     </table>
-                    {{$posts->links()}}
+                    {{ $posts->links() }}
                 </div>
             </div>
         </div>
@@ -312,11 +339,11 @@
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
                         </div>
 
-                        <!-- Description -->
+                        {{-- <!-- Description -->
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="5" placeholder="Description"></textarea>
-                        </div>
+                        </div> --}}
 
                         <!-- Publish Date -->
                         <div class="mb-3">
@@ -324,10 +351,18 @@
                             <input type="date" class="form-control" id="publish_date" name="publish_date" required>
                         </div>
 
+                        <!-- Viewers -->
+                        <div class="mb-3">
+                            <label for="viewers" class="form-label">Viewers</label>
+                            <input type="text" class="form-control" id="viewers" name="viewers"
+                                placeholder="Viewers" required>
+                        </div>
+
                         <!-- Status -->
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
+                                <option value="" disabled selected>Pilih Status</option>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
                             </select>
@@ -337,8 +372,9 @@
                         <div class="mb-3">
                             <label for="unit_id" class="form-label">Unit</label>
                             <select name="unit_id" id="unit_id" class="form-select">
+                                <option value="" disabled selected>Pilih Nama Unit</option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                    <option value="{{ $unit->id }}">{{ $unit->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -348,13 +384,27 @@
                         <div class="mb-3">
                             <label for="user_id" class="form-label">User</label>
                             <select class="form-select" id="user_id" name="user_id">
+                                <option value="" disabled selected>Pilih Nama User</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                         </div>
 
-                        <!-- Category ID -->
+                        <!-- Post Category -->
+                        <div class="mb-3">
+                            <label for="post_category_id" class="form-label">Post Category</label>
+                            <select name="post_category_id" id="post_category_id" class="form-select">
+                                <option value="" disabled selected>Pilih Post Category</option>
+
+                                @foreach ($postcategories as $postcategory)
+                                    <option value="{{ $postcategory->id }}">{{ $postcategory->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+                        {{-- <!-- Category ID -->
                         <div class="mb-3">
                             <label for="category_id" class="form-label">Category</label>
                             <select class="form-select" id="category_id" name="category_id">
@@ -362,7 +412,7 @@
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

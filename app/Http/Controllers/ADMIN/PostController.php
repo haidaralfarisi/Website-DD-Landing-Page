@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ADMIN;
 use App\Http\Controllers\Controller;
 use App\Models\Categories;
 use App\Models\Post;
+use App\Models\PostCategories;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,15 +16,19 @@ class PostController extends Controller
     public function index()
     {
 
-        $posts = Post::with(['user', 'category', 'unit'])->get();
+        $posts = Post::with(['user', 'postcategory', 'unit'])->paginate('10');
+        
         $users = User::all();  // Mengambil semua user untuk dropdown
-        $categories = Categories::all();  // Mengambil semua kategori untuk dropdown
+
+        $postcategories = PostCategories::all();  // Mengambil semua kategori untuk dropdown
+
+        // $categories = Categories::all();  // Mengambil semua kategori untuk dropdown
         $units = Unit::all();
 
         $postsCount = Post::count();  // Menghitung jumlah posts
 
 
-        return view('admin.beranda', compact('posts', 'users', 'categories', 'units', 'postsCount'));
+        return view('admin.beranda', compact('posts', 'users', 'units', 'postsCount', 'postcategories'));
     }
 
     public function store(Request $request)
@@ -36,12 +41,14 @@ class PostController extends Controller
             'meta_description' => 'nullable|string',
             'meta_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'nullable|string',
+            // 'desc' => 'nullable|string',
             'publish_date' => 'nullable|date',
             'status' => 'required|in:active,inactive',
             'unit_id' => 'nullable|exists:units,id', // Optional unit_id
             'user_id' => 'required|exists:users,id', // User ID wajib ada dan harus valid, sesuai dengan ID yang ada di tabel users
-            'category_id' => 'required|exists:categories,id', // Category ID wajib ada dan harus valid, sesuai dengan ID yang ada di tabel categories
+            'post_category_id' => 'required|exists:post_categories,id', // Post Category ID wajib ada dan harus valid sesuai dengan tabel post_categories
+            'viewers' => 'nullable|integer', // Menambahkan viewers sebagai opsional dan tipe integer
+
         ]);
 
         // Upload file meta_thumbnail
@@ -66,12 +73,14 @@ class PostController extends Controller
             'meta_description' => $validated['meta_description'],
             'meta_thumbnail' => $metaThumbnailPath,
             'image' => $imagePath,
-            'description' => $validated['description'],
+            // 'desc' => $validated['desc'],
             'publish_date' => $validated['publish_date'],
             'status' => $validated['status'],
             'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'user_id' => $validated['user_id'],
-            'category_id' => $validated['category_id'], // Menyimpan category_id
+            'post_category_id' => $validated['post_category_id'], // Menyimpan post_category_id
+            'viewers' => $validated['viewers'],
+            
         ]);
 
         // Redirect dengan pesan sukses
@@ -88,12 +97,14 @@ class PostController extends Controller
             'meta_description' => 'nullable|string',
             'meta_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'nullable|string',
+            // 'desc' => 'nullable|string',
             'publish_date' => 'nullable|date',
             'status' => 'required|in:active,inactive',
             'unit_id' => 'required|exists:units,id', // pastikan unit_id valid
             'user_id' => 'required|exists:users,id',
-            'category_id' => 'required|exists:categories,id',
+            'post_category_id' => 'required|exists:post_categories,id', // Post Category ID wajib ada dan harus valid sesuai dengan tabel post_categories
+            'viewers' => 'nullable|integer', // Menambahkan viewers sebagai opsional dan tipe integer
+
         ]);
 
         // Cari post yang akan diupdate
@@ -116,12 +127,14 @@ class PostController extends Controller
             'meta_description' => $validated['meta_description'],
             'meta_thumbnail' => isset($metaThumbnailPath) ? $metaThumbnailPath : $post->meta_thumbnail,
             'image' => isset($imagePath) ? $imagePath : $post->image,
-            'description' => $validated['description'],
+            // 'desc' => $validated['desc'],
             'publish_date' => $validated['publish_date'],
             'status' => $validated['status'],
             'unit_id' => $validated['unit_id'],
             'user_id' => $validated['user_id'],
-            'category_id' => $validated['category_id'],
+            'post_category_id' => $validated['post_category_id'], // Menyimpan post_category_id
+            'viewers' => $validated['viewers'],
+
         ]);
 
         // Redirect ke halaman daftar post setelah update

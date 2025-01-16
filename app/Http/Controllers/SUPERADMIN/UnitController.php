@@ -23,12 +23,12 @@ class UnitController extends Controller
     {
         // Validasi data
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'nama_unit' => 'required|string|max:255',
         ]);
 
         // Persiapkan data untuk disimpan
         $data = [
-            'name' => $validated['name'],
+            'nama_unit' => $validated['nama_unit'],
         ];
 
         // Simpan data ke database
@@ -42,13 +42,13 @@ class UnitController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'nama_unit' => 'required|string|max:255',
         ]);
 
         $unit = Unit::findOrFail($id);
 
         $data = [
-            'name' => $validated['name'],
+            'nama_unit' => $validated['nama_unit'],
         ];
 
         $unit->update($data);
@@ -56,7 +56,7 @@ class UnitController extends Controller
         $unit->update($request->all());
 
         // Redirect dengan pesan sukses
-        return redirect()->back()->with('success', 'unit berhasil diubah.');
+        return redirect()->back()->with('success', 'Unit berhasil diubah.');
     }
 
     // Menghapus Data Unit
