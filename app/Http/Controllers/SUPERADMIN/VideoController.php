@@ -31,7 +31,7 @@ class VideoController extends Controller
             'title' => 'required|string|max:255',
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi file image
-            'status' => 'required|in:active,inactive',  // Status harus salah satu dari active atau inactive
+            'status' => 'required|in:Active,Inactive',  // Status harus salah satu dari active atau inactive
             'url' => 'required|url',  // URL video harus valid
         ]);
 
@@ -69,7 +69,7 @@ class VideoController extends Controller
             'title' => 'required|string|max:255',
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:Active,Inactive',
             'url' => 'required|url',
         ]);
 

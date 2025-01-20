@@ -70,9 +70,13 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(func
 
     # Untuk Aksi Data Post
     Route::get('/post', [SUPERADMINPOST::class, 'index'])->name('superadmin.posts.index');
+    Route::get('/posts/create', [SUPERADMINPOST::class, 'create'])->name('superadmin.posts.create');
+    Route::get('/posts/{post}/edit', [SUPERADMINPOST::class, 'edit'])->name('superadmin.posts.edit');
     Route::post('/post', [SUPERADMINPOST::class, 'store'])->name('superadmin.posts.store');
     Route::delete('/post/{id}', [SUPERADMINPOST::class, 'destroy'])->name('superadmin.posts.destroy');
     Route::put('/post/{id}', [SUPERADMINPOST::class, 'update'])->name('superadmin.posts.update');
+    Route::post('/upload-image', [SUPERADMINPOST::class, 'uploadImage'])->name('superadmin.posts.uploadImage');
+
 
     # Untuk Aksi Data Slider
     Route::get('/slider', [SliderController::class, 'index'])->name('slider.index');
@@ -100,6 +104,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     # Untuk Aksi Data Post
     Route::get('/post', [ADMINPOST::class, 'index'])->name('admin.posts.index');
     Route::post('/post', [ADMINPOST::class, 'store'])->name('admin.posts.store');
+    Route::get('/posts/{post}/edit', [ADMINPOST::class, 'edit'])->name('admin.posts.edit');
+    Route::get('/posts/create', [ADMINPOST::class, 'create'])->name('admin.posts.create');
     Route::delete('/post/{id}', [ADMINPOST::class, 'destroy'])->name('admin.posts.destroy');
     Route::put('/post/{id}', [ADMINPOST::class, 'update'])->name('admin.posts.update');
+    Route::post('/upload-image', [ADMINPOST::class, 'uploadImage'])->name('admin.posts.uploadImage');
+
 });

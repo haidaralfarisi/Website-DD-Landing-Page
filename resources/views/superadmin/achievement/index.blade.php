@@ -145,12 +145,14 @@
                                                     <div class="mb-3">
                                                         <label for="status" class="form-label">Status</label>
                                                         <select class="form-select" id="status" name="status" required>
-                                                            <option value="active"
-                                                                {{ old('status', $achievement->status) == 'active' ? 'selected' : '' }}>
-                                                                Active</option>
-                                                            <option value="inactive"
-                                                                {{ old('status', $achievement->status) == 'inactive' ? 'selected' : '' }}>
-                                                                Inactive</option>
+                                                            <option value="Active"
+                                                                {{ old('status', $achievement->status) == 'Active' ? 'selected' : '' }}>
+                                                                Active
+                                                            </option>
+                                                            <option value="Inactive"
+                                                                {{ old('status', $achievement->status) == 'Inactive' ? 'selected' : '' }}>
+                                                                Inactive
+                                                            </option>
                                                         </select>
                                                     </div>
 

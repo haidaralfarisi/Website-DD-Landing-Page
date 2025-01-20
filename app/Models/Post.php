@@ -17,7 +17,7 @@ class Post extends Model
 
     public function postcategory() // Ganti 'categories' menjadi 'category'
     {
-        return $this->belongsTo(PostCategories::class, 'unit_id', 'id');
+        return $this->belongsTo(PostCategories::class, 'post_category_id', 'id');
     }
 
     public function unit()

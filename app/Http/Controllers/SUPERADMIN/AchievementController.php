@@ -30,7 +30,7 @@ class AchievementController extends Controller
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'desc' => 'nullable|string', // Validasi untuk kolom longtext
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:Active,Inactive',
             'achievement_date' => 'required|date', // Pastikan tanggal pencapaian valid
         ]);
 
@@ -64,7 +64,7 @@ class AchievementController extends Controller
             'unit_id' => 'required|exists:units,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'desc' => 'nullable|string', // Validasi untuk kolom longtext
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:Active,Inactive',
             'achievement_date' => 'nullable|date',
 
         ]);

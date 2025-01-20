@@ -17,7 +17,7 @@ class SliderController extends Controller
     {
         // $sliders = Slider::all();
 
-        $sliders = Slider::with(['unit'])->paginate('10');
+        $sliders = Slider::with(['unit'])->get();
         $units = Unit::all();
 
         $slidersCount = Slider::count();  // Menghitung jumlah posts

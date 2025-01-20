@@ -24,29 +24,28 @@
                         <h5 class="fw-bold">Data Post </h5>
                     </div>
                     <div>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Tambah
-                            Post +</button>
+                        <a href="{{ route('admin.posts.create') }}" class="btn btn-primary">Tambah Post +</a>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table id="myTable" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Judul</th>
-                                <th>Slug</th>
-                                <th>Meta Keyword</th>
-                                <th>Meta Deskripsi</th>
-                                <th>Meta Thumbnail</th>
+                                {{-- <th>Slug</th> --}}
+                                {{-- <th>Meta Keyword</th> --}}
+                                {{-- <th>Meta Deskripsi</th> --}}
+                                {{-- <th>Meta Thumbnail</th> --}}
                                 <th>Image</th>
                                 {{-- <th>Deskripsi</th> --}}
-                                <th>Tanggal Publish</th>
+                                <th>Date</th>
                                 <th>Viewers</th>
                                 <th>Status</th>
-                                <th>Unit id</th>
-                                <th>Post Category</th>
-                                <th>User Id</th>
-                                <th>Aksi</th>
+                                <th>Unit</th>
+                                {{-- <th>Post Category</th> --}}
+                                {{-- <th>User Id</th> --}}
+                                <th width="150">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,42 +53,44 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td style="max-width: 300px">{{ $post->title }}</td>
-                                    <td>{{ $post->slug }}</td>
-                                    <td>{{ $post->meta_keyword }}</td>
-                                    <td>{{ $post->meta_description }}</td>
+                                    {{-- <td>{{ $post->slug }}</td> --}}
+                                    {{-- <td>{{ $post->meta_keyword }}</td> --}}
+                                    {{-- <td>{{ $post->meta_description }}</td> --}}
 
-                                    <td>
+                                    {{-- <td>
                                         @if ($post->meta_thumbnail)
                                             <img src="{{ asset('storage/' . $post->meta_thumbnail) }}" alt="Meta Thumbnail"
                                                 width="50" height="50">
                                         @else
                                             <span>No Image</span>
                                         @endif
-                                    </td>
+                                    </td> --}}
 
                                     <td>
                                         @if ($post->image)
-                                            <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image"
-                                                width="50" height="50">
+                                            <img src="{{ asset('storage/images/' . $post->image) }}" alt="Post Image"
+                                                width="80" height="80" style="cursor: pointer;"
+                                                data-bs-toggle="modal" data-bs-target="#imageModal"
+                                                data-image="{{ asset('storage/images/' . $post->image) }}">
                                         @else
                                             <span>No Image</span>
                                         @endif
                                     </td>
 
                                     {{-- <td>{{ $post->desc }}</td> --}}
-                                    <td>{{ $post->publish_date }}</td>
+                                    <td>{{ date('d/m/Y', strtotime($post->publish_date)) }}</td>
                                     <td>{{ $post->viewers }}</td>
                                     <td>{{ $post->status }}</td>
                                     <td>{{ $post->unit->nama_unit ?? 'No Unit' }}</td> <!-- Menampilkan nama unit -->
-                                    <td>{{ $post->postcategory->name ?? 'No Category' }}</td>
+                                    {{-- <td>{{ $post->postcategory->name ?? 'No Category' }}</td> --}}
                                     <!-- Mengambil nama kategori -->
-                                    <td>{{ $post->user->name ?? 'Unknown User' }}</td> <!-- Mengambil nama user -->
+                                    {{-- <td>{{ $post->user->name ?? 'Unknown User' }}</td> --}}
                                     <td>
                                         {{-- Tombol Edit --}}
-                                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ $post->id }}">
+                                        <a href="{{ route('admin.posts.edit', $post->id) }}"
+                                            class="btn btn-outline-primary">
                                             Edit
-                                        </button>
+                                        </a>
 
                                         {{-- Tombol Hapus --}}
                                         <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST"
@@ -105,7 +106,8 @@
                                 <!-- Modal Untuk Edit User-->
                                 {{-- Modal harus di dalam foreach dan harus meletakkan {{ $user->id }} agar bisa di panggil sesuai id yang
                                 di inginkan --}}
-                                <div class="modal fade" id="editModal{{ $post->id }}" tabindex="-1"
+
+                                {{-- <div class="modal fade" id="editModal{{ $post->id }}" tabindex="-1"
                                     aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content p-3 border-0 rounded-4">
@@ -173,12 +175,6 @@
                                                             required>
                                                     </div>
 
-                                                    {{-- <!-- Description -->
-                                                    <div class="mb-3">
-                                                        <label for="description" class="form-label">Description</label>
-                                                        <textarea class="form-control" id="description" name="description" rows="5">{{ old('description', $post->description) }}</textarea>
-                                                    </div> --}}
-
                                                     <!-- Publish Date -->
                                                     <div class="mb-3">
                                                         <label for="publish_date" class="form-label">Publish Date</label>
@@ -243,20 +239,6 @@
                                                         </select>
                                                     </div>
 
-
-                                                    {{-- <!-- Category ID -->
-                                                    <div class="mb-3">
-                                                        <label for="category_id" class="form-label">Category</label>
-                                                        <select class="form-select" id="category_id" name="category_id"
-                                                            required>
-                                                            @foreach ($categories as $category)
-                                                                <option value="{{ $category->id }}"
-                                                                    {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
-                                                                    {{ $category->name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div> --}}
-
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Tutup</button>
@@ -266,13 +248,44 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             @endforeach
 
                         </tbody>
                     </table>
 
-                    {{ $posts->links() }}
+                    <!-- Modal Bootstrap Untuk Pop Up Gambar -->
+                    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel">Post Image</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img id="modalImage" src="" alt="Image" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Script untuk menangani klik pada gambar
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const imageModal = document.getElementById('imageModal');
+                            const modalImage = document.getElementById('modalImage');
+
+                            imageModal.addEventListener('show.bs.modal', function(event) {
+                                const trigger = event.relatedTarget; // Element yang memicu modal
+                                const imageUrl = trigger.getAttribute('data-image');
+                                modalImage.src = imageUrl; // Set gambar pada modal
+                            });
+                        });
+                    </script>
+
+                    {{-- {{ $posts->links() }} --}}
                 </div>
             </div>
         </div>
@@ -294,8 +307,8 @@
                         <!-- Title -->
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" name="title"
-                                placeholder="Title" required>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Title"
+                                required>
                         </div>
 
                         <!-- Slug -->
@@ -388,21 +401,12 @@
                         <div class="mb-3">
                             <label for="post_category_id" class="form-label">Post Category</label>
                             <select name="post_category_id" id="post_category_id" class="form-select">
+                                <option value="" disabled selected>Pilih Post Category</option>
                                 @foreach ($postcategories as $postcategory)
                                     <option value="{{ $postcategory->id }}">{{ $postcategory->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
-                        {{-- <!-- Category ID -->
-                        <div class="mb-3">
-                            <label for="category_id" class="form-label">Category</label>
-                            <select class="form-select" id="category_id" name="category_id">
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

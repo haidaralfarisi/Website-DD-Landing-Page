@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered text-nowrap">
+                    <table id="myTable" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -156,7 +156,7 @@
 
                         </tbody>
                     </table>
-                    {{$sliders->links()}}
+                    {{-- {{$sliders->links()}} --}}
                 </div>
             </div>
 
