@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered text-nowrap">
+                    <table id="myTable" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -48,7 +48,7 @@
                                 <th>Deskripsi</th>
                                 <th>Status</th>
                                 <th>Tgl Achievement</th>
-                                <th>Aksi</th>
+                                <th width="150">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,7 +66,7 @@
                                         @endif
                                     <td>{{ $achievement->desc }}</td>
                                     <td>{{ $achievement->status }}</td>
-                                    <td>{{ $achievement->achievement_date }}</td>
+                                    <td>{{ date('d/m/Y', strtotime($achievement->achievement_date)) }}</td>
                                     <td>
                                         {{-- Tombol Edit --}}
                                         <button class="btn btn-outline-primary" data-bs-toggle="modal"
@@ -135,9 +135,7 @@
                                                     <!-- Description -->
                                                     <div class="mb-3">
                                                         <label for="desc" class="form-label">Description</label>
-                                                        <textarea class="form-control" id="desc" name="desc" rows="5" required>
-                                                            {{ old('desc', $achievement->desc) }}
-                                                    </textarea>
+                                                        <textarea class="form-control" name="desc" rows="5" required>{{ old('desc', trim($achievement->desc)) }}</textarea>
                                                     </div>
 
 
@@ -181,7 +179,39 @@
 
                         </tbody>
                     </table>
-                    {{ $achievements->links() }}
+
+                    <!-- Modal Bootstrap Untuk Pop Up Gambar -->
+                    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel">Post Image</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img id="modalImage" src="" alt="Image" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Script untuk menangani klik pada gambar
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const imageModal = document.getElementById('imageModal');
+                            const modalImage = document.getElementById('modalImage');
+
+                            imageModal.addEventListener('show.bs.modal', function(event) {
+                                const trigger = event.relatedTarget; // Element yang memicu modal
+                                const imageUrl = trigger.getAttribute('data-image');
+                                modalImage.src = imageUrl; // Set gambar pada modal
+                            });
+                        });
+                    </script>
+
+                    {{-- {{ $achievements->links() }} --}}
                 </div>
             </div>
 
@@ -228,7 +258,7 @@
                         <!-- Deskripsi Achievement -->
                         <div class="mb-3">
                             <label for="desc" class="form-label">Deskripsi Achievement</label>
-                            <textarea class="form-control" id="desc" name="desc" placeholder="Deskripsi Achievement" rows="5"
+                            <textarea class="form-control"  name="desc" rows="5"
                                 required></textarea>
                         </div>
 
@@ -238,8 +268,8 @@
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
                                 <option value="" disabled selected>Pilih Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
                             </select>
                         </div>
 

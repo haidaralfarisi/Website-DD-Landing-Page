@@ -9,7 +9,7 @@
             </a>
             <!-- Badge Jumlah -->
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
-                {{-- {{ $postsCount }} <!-- Menampilkan jumlah post --> --}}
+                {{ $postsCount }} <!-- Menampilkan jumlah post -->
                 <span class="visually-hidden">unread messages</span>
             </span>
         </div>

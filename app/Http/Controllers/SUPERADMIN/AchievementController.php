@@ -12,15 +12,15 @@ class AchievementController extends Controller
 {
     public function index()
     {
-        $achievements = Achievement::with(['unit'])->paginate('10');
+        $achievements = Achievement::with(['unit'])
+        ->latest()
+        ->get();
         $units = Unit::all();
 
         $achievementsCount = Achievement::count();  // Menghitung jumlah slider
 
 
         return view('superadmin.achievement.index', compact('units', 'achievements', 'achievementsCount'));
-
-        
     }
 
     public function store(Request $request)
@@ -46,7 +46,7 @@ class AchievementController extends Controller
             'title' => $validated['title'],
             'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,
-            'desc' => $validated['desc'],
+            'desc' => trim($validated['desc']), // Hapus spasi atau newline di awal dan akhir deskripsi
             'status' => $validated['status'],
             'achievement_date' => $validated['achievement_date'], // Simpan tanggal pencapaian
         ]);
@@ -81,7 +81,7 @@ class AchievementController extends Controller
             'title' => $validated['title'],
             'unit_id' => $validated['unit_id'], // Pastikan unit_id ada, jika tidak null
             'image' => $imagePath,
-            'desc' => $validated['desc'],
+            'desc' => trim($validated['desc']), // Hapus spasi atau newline di awal dan akhir deskripsi
             'status' => $validated['status'],
             'achievement_date' => $validated['achievement_date'], // Simpan tanggal pencapaian
         ]);
@@ -89,16 +89,16 @@ class AchievementController extends Controller
         return redirect()->back()->with('success', 'Achievement berhasil diperbarui.');
     }
 
-     // Menghapus Data kategori
-     public function destroy($id)
-     {
-         // Cari data kategori berdasarkan ID
-         $achievements = Achievement::findOrFail($id);
- 
-         // Hapus data
-         $achievements->delete();
- 
-         // Redirect dengan pesan sukses
-         return redirect()->back()->with('success', 'Data Achievement berhasil dihapus.');
-     }
+    // Menghapus Data kategori
+    public function destroy($id)
+    {
+        // Cari data kategori berdasarkan ID
+        $achievements = Achievement::findOrFail($id);
+
+        // Hapus data
+        $achievements->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Data Achievement berhasil dihapus.');
+    }
 }

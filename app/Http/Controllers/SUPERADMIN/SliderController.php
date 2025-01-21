@@ -67,7 +67,7 @@ class SliderController extends Controller
 
         // Menyimpan gambar jika ada
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
+            $imagePath = $request->file('image')->store('sliders', 'public');
         } else {
             $imagePath = $sliders->image;  // Gunakan gambar lama jika tidak ada yang baru
         }

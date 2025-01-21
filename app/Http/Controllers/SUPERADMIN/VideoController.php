@@ -38,7 +38,7 @@ class VideoController extends Controller
         // Menyimpan gambar jika ada
         if ($request->hasFile('image')) {
             // Menyimpan gambar ke direktori 'public/images'
-            $imagePath = $request->file('image')->store('images', 'public');
+            $imagePath = $request->file('image')->store('videos', 'public');
         } else {
             $imagePath = null;  // Jika tidak ada gambar, set null
         }

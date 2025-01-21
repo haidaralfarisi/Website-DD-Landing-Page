@@ -61,7 +61,7 @@ class FacilityController extends Controller
 
         // Menyimpan gambar jika ada
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
+            $imagePath = $request->file('image')->store('facilities', 'public');
         } else {
             $imagePath = $faciliteis->image;  // Gunakan gambar lama jika tidak ada yang baru
         }
