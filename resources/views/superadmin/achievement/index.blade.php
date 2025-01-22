@@ -59,8 +59,8 @@
                                     <td>{{ $achievement->unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
                                     <td>
                                         @if ($achievement->image)
-                                            <img src="{{ asset('storage/' . $achievement->image) }}" alt="Video Image"
-                                                width="50" height="50">
+                                            <img src="{{ asset('storage/images' . $post->image) }}" alt="Image"
+                                                style="width: 100px; height: auto;">
                                         @else
                                             <span>No Image</span>
                                         @endif
@@ -258,8 +258,7 @@
                         <!-- Deskripsi Achievement -->
                         <div class="mb-3">
                             <label for="desc" class="form-label">Deskripsi Achievement</label>
-                            <textarea class="form-control"  name="desc" rows="5"
-                                required></textarea>
+                            <textarea class="form-control" name="desc" rows="5" required></textarea>
                         </div>
 
 

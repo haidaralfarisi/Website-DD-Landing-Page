@@ -63,14 +63,23 @@ class PostController extends Controller
         ]);
 
         // Upload file meta_thumbnail jika ada
-        $metaThumbnailPath = $request->hasFile('meta_thumbnail')
-            ? $request->file('meta_thumbnail')->store('meta_thumbnails', 'public')
-            : null;
+        if ($request->hasFile('meta_thumbnail')) {
+            // Menghasilkan nama file berdasarkan waktu atau cara lain        
+            // Simpan file ke direktori 'storage/images' (tanpa subfolder)
+            $request->file('meta_thumbnail')->move(public_path('storage/images'));
+            // Simpan nama file di database
+        } else {
+            $metaThumbnailPath = null;
+        }
 
         // Upload file image jika ada
-        $imagePath = $request->hasFile('image')
-            ? $request->file('image')->store('images', 'public')
-            : null;
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/images'), $imageName);
+            $imagePath = $imageName;
+        }
 
         // Simpan data ke database
         Post::create([
@@ -140,12 +149,37 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         // Proses upload gambar jika ada
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 'public');
+        // $metaThumbnailPath = $post->meta_thumbnail ?? null;
+        // if ($request->hasFile('meta_thumbnail')) {
+        //     $metaThumbnailPath = $request->file('meta_thumbnail')->store('thumbnails', 'public');
+        // }
+
+
+        // Menangani meta_thumbnail jika ada file baru
+        $metaThumbnailPath = $post->meta_thumbnail; // Mengambil path lama dari database, jika ada
+        if ($request->hasFile('meta_thumbnail')) {
+            // Hapus gambar lama jika ada di storage
+            if ($post->meta_thumbnail && file_exists(public_path('storage/' . $post->meta_thumbnail))) {
+                unlink(public_path('storage/' . $post->meta_thumbnail)); // Hapus file lama
+            }
+
+            // Upload gambar baru dan simpan path-nya
+            $metaThumbnailPath = $request->file('meta_thumbnail')->store('meta_thumbnails', 'public');
         }
 
-        if ($request->hasFile('meta_thumbnail')) {
-            $metaThumbnailPath = $request->file('meta_thumbnail')->store('thumbnails', 'public');
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($post->image && file_exists(public_path('storage/images/' . $post->image))) {
+                unlink(public_path('storage/images/' . $post->image));
+            }
+
+            // Upload gambar baru
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/images'), $imageName);
+            $imagePath = $imageName; // Simpan nama file gambar baru
+        } else {
+            $imagePath = $post->image; // Tidak ada perubahan pada gambar
         }
 
         // Update data post
@@ -178,8 +212,17 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         // Hapus gambar dari storage jika ada
-        if ($post->image) {
-            Storage::delete('public/' . $post->image);
+        // if ($post->image) {
+        //     Storage::delete('public/' . $post->image);
+        // }
+
+        if ($post->meta_thumbnail && file_exists(public_path('storage/meta_thumbnails' . $post->meta_thumbnail))) {
+            unlink(public_path('storage/meta_thumbnails/' . $post->meta_thumbnail)); // Hapus file meta_thumbnail
+        }
+
+        // Hapus gambar image dari storage jika ada
+        if ($post->image && file_exists(public_path('storage/images/' . $post->image))) {
+            unlink(public_path('storage/images/' . $post->image)); // Hapus file image
         }
 
         // Hapus data
