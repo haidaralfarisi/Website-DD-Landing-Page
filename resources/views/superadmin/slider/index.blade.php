@@ -52,33 +52,45 @@
                             @foreach ($sliders as $slider)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $slider->title }}</td>
-                                        <td>{{ $slider->unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
-                                        <td>
+                                    <td>{{ $slider->title }}</td>
+                                    <td>{{ $slider->unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
+                                    {{-- <td>
                                             @if ($slider->image)
-                                                <img src="{{ asset('storage/' . $slider->image) }}" alt="Gambar"
+                                                <img src="{{ asset('storage/images/' . $slider->image) }}" alt="slider"
                                                     width="50">
                                             @else
                                                 <span>Tidak ada gambar</span>
                                             @endif
-                                        </td>
-                                        <td>{{ $slider->status }}</td>
-                                        <td>
-                                            {{-- Tombol Edit --}}
-                                            <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                                data-bs-target="#editModal{{ $slider->id }}">
-                                                Edit
-                                            </button>
+                                        </td> --}}
 
-                                            {{-- Tombol Hapus --}}
-                                            <form action="{{ route('slider.destroy', $slider->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin mau dihapus?')"
-                                                    class="btn btn-outline-danger">Hapus</button>
-                                            </form>
-                                        </td>
+                                    <td>
+                                        @if ($slider->image)
+                                            <img src="{{ asset('storage/sliders/' . $slider->image) }}" alt="Slider"
+                                                width="110" height="80" style="cursor: pointer;"
+                                                data-bs-toggle="modal" data-bs-target="#imageModal"
+                                                data-image="{{ asset('storage/sliders/' . $slider->image) }}">
+                                        @else
+                                            <span>No Image</span>
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $slider->status }}</td>
+                                    <td>
+                                        {{-- Tombol Edit --}}
+                                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#editModal{{ $slider->id }}">
+                                            Edit
+                                        </button>
+
+                                        {{-- Tombol Hapus --}}
+                                        <form action="{{ route('slider.destroy', $slider->id) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" onclick="return confirm('Yakin mau dihapus?')"
+                                                class="btn btn-outline-danger">Hapus</button>
+                                        </form>
+                                    </td>
                                 </tr>
 
                                 <!-- Modal Untuk Edit User-->
@@ -113,7 +125,7 @@
                                                         <label for="unit_id" class="form-label">Unit</label>
                                                         <select class="form-select" id="unit_id" name="unit_id" required>
                                                             @foreach ($units as $unit)
-                                                                <option value="{{ $unit->id }}" 
+                                                                <option value="{{ $unit->id }}"
                                                                     {{ old('unit_id', $slider->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
                                                                     {{ $unit->nama_unit }}
                                                                 </option>
@@ -140,7 +152,7 @@
                                                                 Inactive</option>
                                                         </select>
                                                     </div>
-                                                    
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Tutup</button>
@@ -153,7 +165,36 @@
                                     </div>
                                 </div>
                             @endforeach
+                            <!-- Modal Bootstrap Untuk Pop Up Gambar -->
+                            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel">Post Image</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img id="modalImage" src="" alt="Image" class="img-fluid">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <script>
+                                // Script untuk menangani klik pada gambar
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const imageModal = document.getElementById('imageModal');
+                                    const modalImage = document.getElementById('modalImage');
+
+                                    imageModal.addEventListener('show.bs.modal', function(event) {
+                                        const trigger = event.relatedTarget; // Element yang memicu modal
+                                        const imageUrl = trigger.getAttribute('data-image');
+                                        modalImage.src = imageUrl; // Set gambar pada modal
+                                    });
+                                });
+                            </script>
                         </tbody>
                     </table>
                     {{-- {{$sliders->links()}} --}}

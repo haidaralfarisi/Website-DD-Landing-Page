@@ -39,6 +39,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
+
         // Persiapkan data untuk disimpan
         $data = [
             'name' => $validated['name'],
@@ -51,9 +52,10 @@ class UserController extends Controller
 
         // Cek jika ada avatar yang diupload
         if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $avatarPath = $request->file('avatar')->store('', 'public');
             $data['avatar'] = $avatarPath; // Menyimpan path avatar di database
         }
+        
 
         // Simpan data ke database
         User::create($data);

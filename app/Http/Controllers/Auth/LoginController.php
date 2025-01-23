@@ -50,6 +50,6 @@ class LoginController extends Controller
         }
 
         // Default redirect if level is not matched
-        return redirect()->route('home');
+        return redirect()->route('welcome');
     }
 }

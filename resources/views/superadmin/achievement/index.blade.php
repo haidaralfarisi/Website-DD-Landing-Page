@@ -59,7 +59,7 @@
                                     <td>{{ $achievement->unit->nama_unit ?? 'Tidak Ada Unit' }}</td>
                                     <td>
                                         @if ($achievement->image)
-                                            <img src="{{ asset('storage/images' . $post->image) }}" alt="Image"
+                                            <img src="{{ asset('storage/images' . $achievement->image) }}" alt="Image"
                                                 style="width: 100px; height: auto;">
                                         @else
                                             <span>No Image</span>

@@ -36,7 +36,7 @@ Auth::routes([
     'register' => false, // Nonaktifkan rute registrasi
 ]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 # SuperAdmin
 Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {

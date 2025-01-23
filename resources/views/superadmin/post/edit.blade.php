@@ -76,6 +76,19 @@
                         value="{{ $post->publish_date }}" required>
                 </div>
 
+                <!-- Unit -->
+                <div class="mb-4">
+                    <label for="unit_id" class="form-label">Unit</label>
+                    <select name="unit_id" id="unit_id" class="form-select">
+                        <option value="" disabled selected>Pilih Unit</option>
+                        @foreach ($units as $unit)
+                            <option value="{{ $unit->id }}"
+                                {{ $post->unit_id == $unit->id ? 'selected' : '' }}>
+                                {{ $unit->nama_unit }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <!-- Status -->
                 {{-- <div class="mb-3">
                     <label for="status" class="form-label">Status</label>

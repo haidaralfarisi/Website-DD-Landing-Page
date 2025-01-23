@@ -78,6 +78,17 @@
                         <input type="date" class="form-control" id="publish_date" name="publish_date" required>
                     </div>
 
+                    <!-- Unit -->
+                    <div class="mb-3">
+                        <label for="publish_date" class="form-label">Unit</label>
+                        <select name="unit_id" id="unit_id" class="form-select">
+                            <option value="" disabled selected>Pilih Unit</option>
+                            @foreach ($units as $unit)
+                                <option value="{{ $unit->id }}">{{ $unit->nama_unit }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <!-- Post Category -->
                     <div class="mb-4">
                         <label for="post_category_id" class="form-label">Post Category</label>
