@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-
-
-
+use Intervention\Image\Laravel\Facades\Image;
 
 class PostController extends Controller
 {
@@ -51,7 +49,7 @@ class PostController extends Controller
             'slug' => 'string|max:255|unique:posts,slug',
             'meta_keyword' => 'nullable|string',
             'meta_description' => 'nullable|string',
-            'meta_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'meta_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             // 'desc' => 'nullable|string',
             'publish_date' => 'nullable|date',
@@ -62,25 +60,20 @@ class PostController extends Controller
 
         ]);
 
-        $meta_thumbnail = null;
-        // Upload file meta_thumbnail jika ada
-        if ($request->hasFile('meta_thumbnail')) {
-            $meta_thumbnail =  'meta_' . md5($request->meta_thumbnail) . '.' . $request->meta_thumbnail->extension();
-            // Format Image Name = unit_md5.extensi
-            $request->file('meta_thumbnail')->storeAs('public/meta_thumbnail', $meta_thumbnail);
-            // Simpan nama file di database
-        } else {
-            $meta_thumbnail = null;
-        }
 
-        // Upload file image jika ada
-        $imagePath = null;
+        //Menyimpan gambar untuk field meta_thumnail dan image
+        $metaImage = null;
+        $postImage = null;
         if ($request->hasFile('image')) {
-            // Memanggil data dari table unit
             $unit  = Unit::where('id', $request->unit_id)->first();
-            // Format Image Name = unit_md5.extensi
-            $imagePath = $unit->nama_unit . '_' . md5($request->image) . '.' . $request->image->extension();
-            $request->file('image')->storeAs('public/images', $imagePath);
+            $metaImage = 'meta_' . md5($request->image) . '.' . $request->image->extension();
+            // Untuk kompres dan simpan image
+            Image::read($request->file('image'))->resize(null, null, function($constraint){
+                $constraint->aspectRatio();
+            })->save("storage/post_meta_thumbnail/".$metaImage);
+
+            $postImage = $unit->nama_unit . '_' . md5($request->image) . '.' . $request->image->extension();
+            $request->file('image')->storeAs('public/post_images', $postImage);
         }
 
         // Simpan data ke database
@@ -89,8 +82,8 @@ class PostController extends Controller
             'slug' => Str::slug($request->title),
             'meta_keyword' => $validated['meta_keyword'],
             'meta_description' => $validated['meta_description'],
-            'meta_thumbnail' => $meta_thumbnail,
-            'image' => $imagePath,
+            'meta_thumbnail' => $metaImage,
+            'image' => $postImage,
             // 'desc' => $validated['desc'],
             'publish_date' => $validated['publish_date'],
             'status' => 'Inactive',
@@ -146,44 +139,34 @@ class PostController extends Controller
         // Cari post yang akan diupdate
         $post = Post::findOrFail($id);
 
-        // Menangani meta_thumbnail jika ada file baru
-        $metaThumbnailName = $post->meta_thumbnail; // Mengambil nama file lama dari database
-        if ($request->hasFile('meta_thumbnail')) {
-            // Hapus gambar lama jika ada di storage
-            if ($post->meta_thumbnail && Storage::exists('public/meta_thumbnail/' . $post->meta_thumbnail)) {
-                Storage::delete('public/meta_thumbnail/' . $post->meta_thumbnail); // Hapus file lama
-            }
+        // Gambar meta_thumbnail dan image
+        $metaImage = $post->meta_thumbnail; // Default ke gambar lama
+        $postImage = $post->image; // Default ke gambar lama
 
-            // Generate nama file baru untuk meta_thumbnail menggunakan MD5
-            $file = $request->file('meta_thumbnail');
-            $metaThumbnailName = 'meta_' . md5(file_get_contents($file)) . '.' . $file->getClientOriginalExtension();
-
-            // Simpan file dengan nama yang telah dibuat
-            $file->storeAs('public/meta_thumbnail', $metaThumbnailName);
-        }
-
-        // Menangani image jika ada file baru
-        $imageName = $post->image; // Mengambil nama file lama dari database
+        // Cek jika ada file image baru
         if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada di storage
-            if ($post->image && Storage::exists('public/images/' . $post->image)) {
-                Storage::delete('public/images/' . $post->image); // Hapus file lama
+            $unit = Unit::where('id', $request->unit_id)->first();
+
+            // Hapus gambar lama jika ada
+            if ($post->meta_thumbnail) {
+                Storage::delete('public/post_meta_thumbnail/' . $post->meta_thumbnail);
+            }
+            if ($post->image) {
+                Storage::delete('public/post_images/' . $post->image);
             }
 
-            // Memanggil data dari table unit berdasarkan unit_id yang dipilih
-            $unit = Unit::find($request->unit_id);
-            if ($unit) {
-                // Format Image Name = nama_unit_md5.extensi
-                $file = $request->file('image');
-                $imageName = $unit->nama_unit . '_' . md5(file_get_contents($file)) . '.' . $file->getClientOriginalExtension();
+            // Simpan gambar baru untuk meta_thumbnail
+            $metaImage = 'meta_' . md5($request->image) . '.' . $request->image->extension();
+            // Pastikan file gambar bisa dibaca dan diproses oleh Intervention Image
+            Image::read($request->file('image'))->resize(400, 400, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save('storage/post_meta_thumbnail/' . $metaImage);
 
-                // Simpan gambar dengan nama yang telah dibuat
-                $file->storeAs('public/images', $imageName);
-            } else {
-                // Jika unit tidak ditemukan, berikan pesan error atau penanganan lainnya
-                return redirect()->back()->with('error', 'Unit tidak ditemukan.');
-            }
+            // Simpan gambar baru untuk image
+            $postImage = $unit->nama_unit . '_' . md5($request->image) . '.' . $request->image->extension();
+            $request->file('image')->storeAs('public/post_images', $postImage);
         }
+
 
         // Update data post
         $post->update([
@@ -191,8 +174,8 @@ class PostController extends Controller
             'slug' => Str::slug($request->title),
             'meta_keyword' => $validated['meta_keyword'],
             'meta_description' => $validated['meta_description'],
-            'meta_thumbnail' => $metaThumbnailName, // Simpan hanya nama file meta_thumbnail
-            'image' => $imageName, // Simpan hanya nama file image
+            'meta_thumbnail' => $metaImage, // Simpan hanya nama file meta_thumbnail
+            'image' => $postImage, // Simpan hanya nama file image
             'publish_date' => $validated['publish_date'],
             'status' => 'Inactive',
             'unit_id' => Auth::user()->unit_id,
@@ -213,13 +196,13 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         // Hapus file meta_thumbnail jika ada
-        if ($post->meta_thumbnail && Storage::exists('public/meta_thumbnail/' . $post->meta_thumbnail)) {
-            Storage::delete('public/meta_thumbnail/' . $post->meta_thumbnail);
+        if ($post->meta_thumbnail && Storage::exists('public/post_meta_thumbnail/' . $post->meta_thumbnail)) {
+            Storage::delete('public/post_meta_thumbnail/' . $post->meta_thumbnail);
         }
 
         // Hapus file image jika ada
-        if ($post->image && Storage::exists('public/images/' . $post->image)) {
-            Storage::delete('public/images/' . $post->image);
+        if ($post->image && Storage::exists('public/post_images/' . $post->image)) {
+            Storage::delete('public/post_images/' . $post->image);
         }
 
         // Hapus data dari database

@@ -51,11 +51,11 @@
                     <textarea class="form-control" id="meta_description" name="meta_description" rows="3">{{ $post->meta_description }}</textarea>
                 </div>
 
-                <!-- Meta Thumbnail -->
+                {{-- <!-- Meta Thumbnail -->
                 <div class="mb-3">
                     <label for="meta_thumbnail" class="form-label">Meta Thumbnail</label>
                     <input type="file" class="form-control" id="meta_thumbnail" name="meta_thumbnail">
-                </div>
+                </div> --}}
 
                 <!-- Description (Summernote) -->
                 <div class="mb-3">

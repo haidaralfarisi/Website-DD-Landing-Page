@@ -54,11 +54,11 @@
                     </div>
 
                     <!-- Meta Thumbnail -->
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="meta_thumbnail" class="form-label">Meta Thumbnail</label>
                         <input type="file" class="form-control" id="meta_thumbnail" name="meta_thumbnail"
                             placeholder="Meta Thumbnail">
-                    </div>
+                    </div> --}}
 
                     <!-- Description -->
                     <div class="mb-3">

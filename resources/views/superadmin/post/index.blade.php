@@ -76,10 +76,10 @@
 
                                     <td>
                                         @if ($post->image)
-                                            <img src="{{ asset('storage/images/' . $post->image) }}" alt="Post Image"
+                                            <img src="{{ asset('storage/post_images/' . $post->image) }}" alt="Post Image"
                                                 width="110" height="80" style="cursor: pointer;"
                                                 data-bs-toggle="modal" data-bs-target="#imageModal"
-                                                data-image="{{ asset('storage/images/' . $post->image) }}">
+                                                data-image="{{ asset('storage/post_images/' . $post->image) }}">
                                         @else
                                             <span>No Image</span>
                                         @endif
